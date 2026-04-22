@@ -1,4 +1,4 @@
-# StayEase 🏨
+![StayEase](assets/images/logo.png)
 
 > A modern hotel room booking system — browse, reserve, and manage your stays with ease.
 
