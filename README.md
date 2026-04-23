@@ -1,25 +1,24 @@
 ![StayEase](assets/images/logo.png)
 
-> A modern hotel room booking system — browse, reserve, and manage your stays with ease.
+> A modern hotel discovery & booking platform — search hotels, explore rooms, and manage your stays with ease.
 
 ---
 
 ## Overview
 
-StayEase is a full-stack web application built with plain HTML, CSS, and PHP. Guests can register, browse available rooms, and make reservations. Admins manage rooms and oversee all bookings through a dedicated panel.
-
-Built as a university team project by 6 members, covering real-world concepts: authentication, sessions, CRUD operations, relational databases, and role-based access control.
+StayEase is a full-stack web application built with plain HTML, CSS, and PHP. Users can register, search hotels by city, browse rooms, make reservations, and leave reviews. Built as a university team project by 6 members, covering real-world concepts: authentication, sessions, CRUD operations, relational databases, and multi-table JOINs.
 
 ---
 
 ## Features
 
 - User registration and login with secure password hashing
-- Browse rooms with filtering by type
+- Search hotels by city with dynamic results
+- Hotel detail pages with room listings and average review rating
 - Room detail pages with full description and pricing
 - Booking system with date validation and availability checks
 - User dashboard with booking history and cancellation
-- Admin panel for managing rooms and confirming bookings
+- Hotel reviews with rating system (one review per user per hotel)
 
 ---
 
@@ -39,24 +38,24 @@ Built as a university team project by 6 members, covering real-world concepts: a
 
 ```
 stayease/
-├── css/              # One CSS file per member
-├── php/              # PHP logic + shared config
-├── assets/images/    # Room and UI images
-└── *.html            # 12 pages across 6 members
+├── css/                  # One CSS file per member
+├── php/                  # PHP logic + shared config
+├── assets/images/        # Hotel and room images
+└── *.html                # 12 pages across 6 members
 ```
 
 ---
 
 ## Team
 
-| Name            | Responsibility         |
-|-----------------|------------------------|
-| Anas Mohamed    | Authentication & DB    |
-| Mohamed Gamil   | Public pages & contact |
-| Ahmed Tarig     | Rooms & room detail    |
-| Mohsen Mohamed  | Booking flow           |
-| Yassin Abdullah | User dashboard         |
-| Tarek Elsayed   | Admin panel            |
+| Name            | Responsibility              |
+|-----------------|-----------------------------|
+| Anas Mohamed    | Authentication & DB setup   |
+| Mohamed Gamil   | Homepage & hotel search     |
+| Tarek Elsayed   | Hotel detail & room pages   |
+| Mohsen Mohamed  | Booking flow                |
+| Yassin Abdullah | User dashboard              |
+| Ahmed Tarig     | Reviews & about page        |
 
 ---
 
