@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results — StayEase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- NAVBAR (same as index.html) -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">StayEase<span>.</span></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="search-results.html" class="active">Search</a>
+        <a href="reviews.html">Reviews</a>
+      </div>
+      <div class="nav-auth">
+        <a href="about.html">Account</a>
+        <a href="login.html" class="btn-login">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =====================================================================
+    SEARCH RESULTS MAIN CONTENT
+    When this page loads, php/search.php runs the DB query and injects hotel
+    cards into #resultsContainer via PHP include or JavaScript fetch.
+
+    Two options for connecting search.php output to this page:
+    OPTION A (simpler): rename this file to search-results.php and use:
+      <?php include 'php/search.php'; ?>
+      Then echo the hotel cards directly into #resultsContainer.
+
+    OPTION B: Keep as .html and use fetch() in JS to call search.php and
+      inject the response HTML into #resultsContainer dynamically.
+
+    We are going with OPTION A (simpler for a university project).
+    The actual results injection is handled in php/search.php.
+  ====================================================================== -->
+  <main class="results-page">
+    <div class="container">
+
+      <!-- Results Header: shows city name + date + guest count from URL params -->
+      <div class="results-header">
+        <div>
+          <!--
+            This h1 is updated by main.js using URLSearchParams to read
+            ?city=London&check_in=2024-10-24&check_out=2024-10-28&guests=2
+            from the URL and display it nicely.
+          -->
+          <h1 id="resultsTitle">Search Results</h1>
+          <p id="resultsSubtitle" style="font-size:14px; color:var(--muted); margin-top:4px;"></p>
+        </div>
+        <div class="sort-bar">
+          <label for="sortBy">Sort by:</label>
+          <select id="sortBy" name="sort">
+            <option value="popularity">Popularity</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Two-column layout: sidebar filters + results grid -->
+      <div class="results-layout">
+
+        <!-- ── FILTERS SIDEBAR ── -->
+        <aside class="filters-panel">
+          <div class="filters-top">
+            <h3>Filters</h3>
+            <span class="clear-btn" id="clearFilters">Clear all</span>
+          </div>
+
+          <!-- Price Range -->
+          <div class="filter-group">
+            <label class="group-label">Price Range (per night)</label>
+            <div class="price-range">
+              <input type="range" id="priceRange" min="0" max="1000" value="500" step="10">
+              <div class="price-labels">
+                <span>$50</span>
+                <span id="priceMax">$500</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Star Rating -->
+          <div class="filter-group">
+            <label class="group-label">Star Rating</label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="stars" value="5" checked>
+              5 Stars <span style="color:#F59E0B; margin-left:4px;">★</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="stars" value="4" checked>
+              4 Stars <span style="color:#F59E0B; margin-left:4px;">★</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="stars" value="3">
+              3 Stars <span style="color:#F59E0B; margin-left:4px;">★</span>
+            </label>
+          </div>
+
+          <!-- Amenities -->
+          <div class="filter-group">
+            <label class="group-label">Amenities</label>
+            <label class="checkbox-item"><input type="checkbox" name="amenity" value="wifi"> Free WiFi</label>
+            <label class="checkbox-item"><input type="checkbox" name="amenity" value="pool" checked> Pool</label>
+            <label class="checkbox-item"><input type="checkbox" name="amenity" value="gym"> Gym</label>
+            <label class="checkbox-item"><input type="checkbox" name="amenity" value="spa"> Spa</label>
+            <label class="checkbox-item"><input type="checkbox" name="amenity" value="pet"> Pet Friendly</label>
+          </div>
+
+        </aside>
+
+        <!-- ── RESULTS AREA ──
+          php/search.php injects hotel cards here.
+          The 3 hardcoded cards below are PLACEHOLDER UI only —
+          they show what the layout looks like before PHP is connected.
+        -->
+        <div id="resultsContainer">
+
+          <!-- Result Card 1 -->
+          <div class="result-card">
+            <div class="result-card-img">
+              <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=500&q=80" alt="The Grand Palace Hotel">
+              <button class="wishlist-btn" title="Save to wishlist"><i class="fa-regular fa-heart"></i></button>
+            </div>
+            <div class="result-card-body">
+              <div class="result-card-top">
+                <div>
+                  <h3>The Grand Palace Hotel</h3>
+                  <p class="result-location"><i class="fa-solid fa-location-dot fa-xs"></i> Kensington, London</p>
+                  <div class="hotel-stars" style="font-size:14px; margin-bottom:4px;">★★★★★</div>
+                  <p class="result-reviews">1,240 reviews</p>
+                </div>
+                <div class="score-badge">
+                  <span>9.2</span>
+                  SUPERB
+                </div>
+              </div>
+              <p class="result-desc">Experience Victorian elegance paired with contemporary luxury in the heart of London's museum district. Features a Michelin-star restaurant and award-winning spa.</p>
+              <div class="result-tags">
+                <span class="tag">Free Cancellation</span>
+                <span class="tag">WiFi Included</span>
+              </div>
+              <div class="result-card-bottom">
+                <div class="result-price">
+                  <small>Price for 4 nights</small>
+                  <strong>$340</strong> <span>/ night</span>
+                </div>
+                <a href="hotel-detail.html?id=1" class="btn-view">View Deal</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result Card 2 -->
+          <div class="result-card">
+            <div class="result-card-img">
+              <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80" alt="Riverfront Boutique Suites">
+              <button class="wishlist-btn" title="Save to wishlist"><i class="fa-regular fa-heart"></i></button>
+            </div>
+            <div class="result-card-body">
+              <div class="result-card-top">
+                <div>
+                  <h3>Riverfront Boutique Suites</h3>
+                  <p class="result-location"><i class="fa-solid fa-location-dot fa-xs"></i> Southbank, London</p>
+                  <div class="hotel-stars" style="font-size:14px; margin-bottom:4px;">★★★★</div>
+                  <p class="result-reviews">856 reviews</p>
+                </div>
+                <div class="score-badge">
+                  <span>8.8</span>
+                  EXCELLENT
+                </div>
+              </div>
+              <p class="result-desc">Stylish, industrial-chic rooms overlooking the Thames. Perfect for travelers seeking a modern vibe near the London Eye and galleries.</p>
+              <div class="result-tags">
+                <span class="tag">Limited Offer</span>
+                <span class="tag">Gym Access</span>
+              </div>
+              <div class="result-card-bottom">
+                <div class="result-price">
+                  <small>Price for 4 nights</small>
+                  <strong>$215</strong> <span>/ night</span>
+                </div>
+                <a href="hotel-detail.html?id=2" class="btn-view">View Deal</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result Card 3 -->
+          <div class="result-card">
+            <div class="result-card-img">
+              <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&q=80" alt="Skyline Regency & Spa">
+              <button class="wishlist-btn" title="Save to wishlist"><i class="fa-regular fa-heart"></i></button>
+            </div>
+            <div class="result-card-body">
+              <div class="result-card-top">
+                <div>
+                  <h3>Skyline Regency & Spa</h3>
+                  <p class="result-location"><i class="fa-solid fa-location-dot fa-xs"></i> City of London</p>
+                  <div class="hotel-stars" style="font-size:14px; margin-bottom:4px;">★★★★★</div>
+                  <p class="result-reviews">412 reviews</p>
+                </div>
+                <div class="score-badge">
+                  <span>9.5</span>
+                  EXCEPTIONAL
+                </div>
+              </div>
+              <p class="result-desc">London's most iconic views meet unparalleled service. Featuring floor-to-ceiling windows and a world-class wellness center.</p>
+              <div class="result-tags">
+                <span class="tag">Breakfast Included</span>
+                <span class="tag">Pool & Spa</span>
+              </div>
+              <div class="result-card-bottom">
+                <div class="result-price">
+                  <small>Price for 4 nights</small>
+                  <strong>$485</strong> <span>/ night</span>
+                </div>
+                <a href="hotel-detail.html?id=3" class="btn-view">View Deal</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Show More Button -->
+          <div class="show-more-wrap">
+            <button class="btn-show-more">
+              Show more hotels <i class="fa-solid fa-chevron-down"></i>
+            </button>
+          </div>
+
+        </div>
+        <!-- END #resultsContainer -->
+
+      </div>
+      <!-- END results-layout -->
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">StayEase</div>
+      <div class="footer-links">
+        <a href="about.html">About Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help Center</a>
+        <a href="#">Partners</a>
+      </div>
+      <p class="footer-copy">© 2024 StayEase Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
