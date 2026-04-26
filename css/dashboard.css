@@ -1,0 +1,524 @@
+/* =========================================================
+   StayEase. - Member 5 Dashboard CSS
+   File: css/dashboard.css
+   Pages: dashboard.html, my-bookings.html
+   ========================================================= */
+
+/* 01 — DESIGN SYSTEM VARIABLES */
+:root {
+  --primary:      #2563EB;
+  --primary-dark: #1D4ED8;
+  --primary-light:#EFF6FF;
+  --bg:           #EEF2F7;
+  --white:        #FFFFFF;
+  --gray-input:   #F1F5F9;
+  --gray-border:  #E2E8F0;
+  --text:         #0F172A;
+  --muted:        #64748B;
+  --success:      #16A34A;
+  --danger:       #DC2626;
+
+  --warning-bg:   #FEF3C7;
+  --warning-text: #B45309;
+
+  --success-bg:   #DCFCE7;
+  --danger-bg:    #FEE2E2;
+
+  --radius-sm:    8px;
+  --radius-md:    12px;
+  --radius-lg:    20px;
+
+  --shadow: 0 1px 3px rgba(0,0,0,.08),
+            0 4px 16px rgba(0,0,0,.06);
+}
+
+/* 02 — RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* 03 — GLOBAL ELEMENTS */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button,
+a {
+  transition: all 0.2s ease;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* 04 — PAGE WRAPPER */
+.dashboard-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+/* 05 — DASHBOARD HEADER */
+.dashboard-header {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.dashboard-title h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.dashboard-title h1 span {
+  color: var(--primary);
+}
+
+.dashboard-title p {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 06 — BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--gray-input);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-disabled,
+button:disabled {
+  background: var(--gray-border);
+  color: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 07 — STATS GRID */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stat-note {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* 08 — QUICK LINKS */
+.quick-links {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.quick-link-card {
+  background: var(--gray-input);
+  border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.quick-link-card:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+
+.quick-link-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.quick-link-card p {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+/* 09 — BOOKINGS PAGE HEADER */
+.bookings-header {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+.bookings-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.bookings-header p {
+  color: var(--muted);
+}
+
+/* 10 — BOOKING TABLE CARD */
+.table-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 1px solid var(--gray-border);
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.bookings-table thead {
+  background: var(--gray-input);
+}
+
+.bookings-table th {
+  padding: 18px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.bookings-table td {
+  padding: 20px;
+  border-bottom: 1px solid var(--gray-border);
+  font-size: 14px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.bookings-table tbody tr:hover {
+  background: var(--primary-light);
+}
+
+.bookings-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.hotel-name {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.room-name {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.price {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* 11 — STATUS BADGES */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-pending {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+.status-confirmed {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.status-cancelled {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+/* 12 — CANCEL FORM */
+.cancel-form {
+  display: inline-block;
+}
+
+.cancel-btn {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: none;
+  background: var(--danger);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  opacity: 0.9;
+}
+
+.no-action {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* 13 — EMPTY STATE */
+.empty-state {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px solid var(--gray-border);
+}
+
+.empty-state h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+/* 14 — ALERT MESSAGES */
+.alert {
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.alert-success {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.alert-error {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+/* 15 — SIMPLE NAVBAR SUPPORT */
+.navbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-border);
+  padding: 18px 24px;
+}
+
+.navbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--primary);
+}
+
+/* 16 — RESPONSIVE DESIGN */
+@media (max-width: 900px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-links-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-page {
+    padding: 24px 16px 48px;
+  }
+
+  .dashboard-header,
+  .bookings-header,
+  .quick-links {
+    padding: 24px;
+  }
+
+  .dashboard-title h1,
+  .bookings-header h1 {
+    font-size: 26px;
+  }
+
+  .stat-number {
+    font-size: 32px;
+  }
+
+  .navbar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+}
