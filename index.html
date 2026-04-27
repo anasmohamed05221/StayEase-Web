@@ -6,6 +6,8 @@
     <title>StayEase. | Hotel Discovery & Booking</title>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!--Flatpickr calender-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -64,7 +66,7 @@
         <i class="fa-solid fa-calendar-days"></i>
         <div class="search-field-text">
           <label for="check_in">Check-in</label>
-          <input type="date" id="check_in" name="check_in">
+          <input type="date" id="check_in" name="check_in" placeholder="Add date">
         </div>
       </div>
  
@@ -72,7 +74,7 @@
         <i class="fa-solid fa-calendar-check"></i>
         <div class="search-field-text">
           <label for="check_out">Check-out</label>
-          <input type="date" id="check_out" name="check_out">
+          <input type="date" id="check_out" name="check_out" placeholder="Add date">
         </div>
       </div>
  
@@ -236,6 +238,11 @@
   </footer>
  
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#check_in", { minDate: "today" });
+    flatpickr("#check_out", { minDate: "today" });
+  </script>
 </body>
 </html>
  

@@ -220,13 +220,14 @@ img { display: block; max-width: 100%; }
   background: transparent;
   padding: 0;
   width: 100%;
+  text-align: center;
 }
  
 .search-field-text input::placeholder {
   color: #94A3B8;
   font-weight: 400;
 }
- 
+
 /* Search submit button — pill shape inside the pill bar */
 .search-btn {
   background: var(--primary);
