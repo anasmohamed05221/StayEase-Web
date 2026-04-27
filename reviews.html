@@ -4,14 +4,31 @@
   <meta charset="UTF-8">
   <title>StayEase. Reviews</title>
 
+  <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/reviews.css">
-
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-  <main class="container">
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">StayEase<span>.</span></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="search-results.html">Discover</a>
+        <a href="about.html">About</a>
+        <a href="reviews.html" class="active">Reviews</a>
+      </div>
+      <div class="nav-auth">
+        <a href="dashboard.html" class="profile-icon"><i class="fa-regular fa-circle-user"></i></a>
+        <a href="login.html" class="btn-login">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="reviews-container">
 
     <section class="hotel-header">
       <div class="hotel-info">
@@ -90,6 +107,19 @@
     </div>
 
   </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">StayEase</div>
+      <div class="footer-links">
+        <a href="about.html">About Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Partners</a>
+      </div>
+      <p class="footer-copy">© 2024 StayEase Inc. All rights reserved.</p>
+    </div>
+  </footer>
 
 </body>
 </html>
