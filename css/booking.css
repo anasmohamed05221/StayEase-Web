@@ -1,1 +1,217 @@
-/*Mohsen 7adar*/
+:root {
+  --primary:      #2563EB;
+  --primary-dark: #1D4ED8;
+  --primary-light:#EFF6FF;
+  --bg:           #EEF2F7;
+  --white:        #FFFFFF;
+  --gray-input:   #F1F5F9;
+  --gray-border:  #E2E8F0;
+  --text:         #0F172A;
+  --muted:        #64748B;
+  --success:      #16A34A;
+  --danger:       #DC2626;
+  --radius-sm:    8px;
+  --radius-md:    12px;
+  --radius-lg:    20px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.navbar {
+  background: var(--white);
+  padding: 18px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.nav-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 48px auto;
+  padding: 0 24px;
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  border: 1px solid var(--gray-border);
+}
+
+.badge {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 8px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+input {
+  width: 100%;
+  background: var(--gray-input);
+  border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 13px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+button,
+.button-link {
+  display: inline-block;
+  margin-top: 24px;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 13px 22px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover,
+.button-link:hover {
+  background: var(--primary-dark);
+}
+
+.secondary-link {
+  display: inline-block;
+  margin-left: 12px;
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.room-box {
+  background: var(--primary-light);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.room-box p {
+  margin-bottom: 8px;
+}
+
+.price-box {
+  background: var(--gray-input);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-top: 20px;
+  font-weight: 700;
+}
+
+.error {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.success-card {
+  text-align: center;
+}
+
+.success-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--success);
+  color: var(--white);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.detail-row {
+  border-bottom: 1px solid var(--gray-border);
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-row strong {
+  color: var(--text);
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px 24px;
+  }
+
+  .nav-links a {
+    margin: 0 8px;
+  }
+}
