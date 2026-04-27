@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <!-- =====================================================================
@@ -39,7 +38,7 @@
       </div>
     </div>
   </nav>
- 
+
   <!-- =====================================================================
     HERO SECTION
     - background-image set inline so any team member can swap the image easily
@@ -47,13 +46,13 @@
     - form METHOD="GET" → URL becomes php/search.php?city=Cairo&check_in=...
       search.php reads these with $_GET['city'], $_GET['check_in'], etc.
   ====================================================================== -->
- <section class="hero" style="background-image: url('assets/images/hero-bg-v2.png');">
- 
+  <section class="hero" style="background-image: url('assets/images/hero-bg-v2.png');">
+
     <h1>Find your next escape</h1>
     <p>Discover handpicked boutique hotels and luxury stays for your perfect getaway.</p>
- 
+
     <form class="search-box" id="searchForm" action="php/search.php" method="GET">
- 
+
       <div class="search-field">
         <i class="fa-solid fa-location-dot"></i>
         <div class="search-field-text">
@@ -61,7 +60,7 @@
           <input type="text" id="city" name="city" placeholder="Where are you going?" autocomplete="off">
         </div>
       </div>
- 
+
       <div class="search-field">
         <i class="fa-solid fa-calendar-days"></i>
         <div class="search-field-text">
@@ -69,7 +68,7 @@
           <input type="date" id="check_in" name="check_in" placeholder="Add date">
         </div>
       </div>
- 
+
       <div class="search-field">
         <i class="fa-solid fa-calendar-check"></i>
         <div class="search-field-text">
@@ -77,32 +76,83 @@
           <input type="date" id="check_out" name="check_out" placeholder="Add date">
         </div>
       </div>
- 
+
       <button type="submit" class="search-btn">
         <i class="fa-solid fa-magnifying-glass"></i>
         Search
       </button>
- 
+
     </form>
- 
+
     <!-- Shown by main.js if check-out is before check-in -->
     <p class="form-error" id="dateError">
       <i class="fa-solid fa-circle-exclamation"></i>
       Check-out date must be after check-in date.
     </p>
- 
+
   </section>
- 
+
   <!-- =====================================================================
-    FEATURED HOTELS — hardcoded placeholders for now.
-    WHEN DB IS READY: replace the .hotels-grid content with:
+    FEATURED HOTELS
+    WHEN DB IS READY: replace the .hotels-grid content with the PHP below.
+
+    FIXED ERRORS vs original:
+      ✗ Old query: SELECT * FROM hotels ORDER BY rating DESC LIMIT 4
+          → hotels table has NO rating column (rating lives in the reviews table)
+          → hotels table has NO price column (price lives in the rooms table)
+
+      ✓ Correct query: JOIN rooms to get the lowest available room price,
+          JOIN reviews to compute the average guest rating per hotel,
+          then order by that computed average.
+
     <?php
       require_once 'php/config.php';
-      $stmt = $pdo->query("SELECT * FROM hotels ORDER BY rating DESC LIMIT 4");
-      foreach ($stmt->fetchAll() as $h): ?>
-        <a href="hotel-detail.html?id=<?= $h['id'] ?>" class="hotel-card">
-          ... use $h['name'], $h['city'], $h['price_per_night'], $h['image'] ...
-        </a>
+
+      $stmt = $pdo->query("
+        SELECT
+          h.id,
+          h.name,
+          h.city,
+          h.image,
+          h.stars,
+          MIN(r.price_per_night)          AS min_price,
+          ROUND(AVG(rv.rating), 1)        AS avg_rating
+        FROM   hotels h
+        LEFT JOIN rooms   r  ON r.hotel_id  = h.id AND r.is_available = 1
+        LEFT JOIN reviews rv ON rv.hotel_id = h.id
+        GROUP  BY h.id, h.name, h.city, h.image, h.stars
+        ORDER  BY avg_rating DESC
+        LIMIT  4
+      ");
+
+      foreach ($stmt->fetchAll() as $h):
+        // Build the star string from the DB integer (h.stars is TINYINT in schema)
+        $stars    = str_repeat('★', (int)$h['stars']) . str_repeat('☆', 5 - (int)$h['stars']);
+        $minPrice = $h['min_price'] ? '$' . number_format($h['min_price'], 0) : 'N/A';
+    ?>
+      <a href="hotel-detail.php?id=<?= $h['id'] ?>" class="hotel-card">
+        <div class="hotel-card-img">
+          <img src="<?= htmlspecialchars($h['image']) ?>" alt="<?= htmlspecialchars($h['name']) ?>">
+        </div>
+        <div class="hotel-card-body">
+          <div class="hotel-stars"><?= $stars ?></div>
+          <h3><?= htmlspecialchars($h['name']) ?></h3>
+          <p class="city">
+            <i class="fa-solid fa-location-dot fa-xs"></i>
+            <?= htmlspecialchars($h['city']) ?>
+          </p>
+        </div>
+        <div class="hotel-card-footer">
+          <div class="hotel-price">
+            <small>Starting from</small>
+            <strong>
+              <?= $minPrice ?>
+              <span style="font-size:13px;font-weight:400;color:var(--muted)"> /night</span>
+            </strong>
+          </div>
+          <span class="btn-card">View Hotel</span>
+        </div>
+      </a>
     <?php endforeach; ?>
   ====================================================================== -->
   <section class="section">
@@ -112,9 +162,9 @@
         <a href="search-results.html">View All Destinations ›</a>
       </div>
       <p class="section-sub">Explore our most-loved cities this season.</p>
- 
+
       <div class="hotels-grid">
- 
+
         <a href="hotel-detail.html?id=1" class="hotel-card">
           <div class="hotel-card-img">
             <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&q=80" alt="Paris">
@@ -130,7 +180,7 @@
             <span class="btn-card">View Hotel</span>
           </div>
         </a>
- 
+
         <a href="hotel-detail.html?id=2" class="hotel-card">
           <div class="hotel-card-img">
             <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=500&q=80" alt="Tokyo">
@@ -145,7 +195,7 @@
             <span class="btn-card">View Hotel</span>
           </div>
         </a>
- 
+
         <a href="hotel-detail.html?id=3" class="hotel-card">
           <div class="hotel-card-img">
             <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=500&q=80" alt="Dubai">
@@ -161,7 +211,7 @@
             <span class="btn-card">View Hotel</span>
           </div>
         </a>
- 
+
         <a href="hotel-detail.html?id=4" class="hotel-card">
           <div class="hotel-card-img">
             <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=500&q=80" alt="Sydney">
@@ -176,11 +226,11 @@
             <span class="btn-card">View Hotel</span>
           </div>
         </a>
- 
+
       </div>
     </div>
   </section>
- 
+
   <!-- WHY CHOOSE US -->
   <section class="why-section">
     <div class="container">
@@ -205,7 +255,7 @@
       </div>
     </div>
   </section>
- 
+
   <!-- CTA BANNER -->
   <section class="cta-section">
     <div class="container">
@@ -221,7 +271,7 @@
       </div>
     </div>
   </section>
- 
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -236,7 +286,7 @@
       <p class="footer-copy">© 2024 StayEase Inc. All rights reserved.</p>
     </div>
   </footer>
- 
+
   <script src="js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
@@ -245,4 +295,3 @@
   </script>
 </body>
 </html>
- 
