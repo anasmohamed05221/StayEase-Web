@@ -54,42 +54,43 @@
       <div class="results-layout">
 
         <!-- ── FILTERS SIDEBAR ── -->
-        <aside class="filters-panel">
-          <div class="filters-top">
-            <h3>Filters</h3>
-            <span class="clear-btn" id="clearFilters">Clear all</span>
-          </div>
+        <form id="filtersForm" method="GET" action="search-results.php">
+          <!-- Carry over search params -->
+          <input type="hidden" name="city"      value="<?= htmlspecialchars($city) ?>">
+          <input type="hidden" name="check_in"  value="<?= htmlspecialchars($checkIn) ?>">
+          <input type="hidden" name="check_out" value="<?= htmlspecialchars($checkOut) ?>">
+          <input type="hidden" name="sort"      value="<?= htmlspecialchars($sort) ?>">
 
-          <!-- Price Range — maps to rooms.price_per_night in search.php -->
-          <div class="filter-group">
-            <label class="group-label">Price Range (per night)</label>
-            <div class="price-range">
-              <input type="range" id="priceRange" min="0" max="1000" value="500" step="10">
-              <div class="price-labels">
-                <span>$50</span>
-                <span id="priceMax">$500</span>
+          <aside class="filters-panel">
+            <div class="filters-top">
+              <h3>Filters</h3>
+              <a href="search-results.php?city=<?= htmlspecialchars($city) ?>&check_in=<?= htmlspecialchars($checkIn) ?>&check_out=<?= htmlspecialchars($checkOut) ?>" class="clear-btn">Clear all</a>
+            </div>
+
+            <div class="filter-group">
+              <label class="group-label">Price Range (per night)</label>
+              <div class="price-range">
+                <input type="range" id="priceRange" name="max_price" min="0" max="1000" value="<?= $maxPrice ?>" step="10">
+                <div class="price-labels">
+                  <span>$0</span>
+                  <span id="priceMax">$<?= $maxPrice ?></span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Star Rating — maps to hotels.stars (TINYINT in DB) -->
-          <div class="filter-group">
-            <label class="group-label">Star Rating</label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="stars" value="5" checked>
-              5 Stars <span style="color:#F59E0B; margin-left:4px;">★</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="stars" value="4" checked>
-              4 Stars <span style="color:#F59E0B; margin-left:4px;">★</span>
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" name="stars" value="3">
-              3 Stars <span style="color:#F59E0B; margin-left:4px;">★</span>
-            </label>
-          </div>
+            <div class="filter-group">
+              <label class="group-label">Star Rating</label>
+              <?php foreach ([5, 4, 3] as $s): ?>
+              <label class="checkbox-item">
+                <input type="checkbox" name="stars[]" value="<?= $s ?>"
+                  <?= (empty($starsFilter) || in_array($s, $starsFilter)) ? 'checked' : '' ?>>
+                <?= $s ?> Stars <span style="color:#F59E0B; margin-left:4px;">★</span>
+              </label>
+              <?php endforeach; ?>
+            </div>
 
-        </aside>
+          </aside>
+        </form>
 
         <div id="resultsContainer">
 
@@ -168,6 +169,7 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/filters.js"></script>
 </body>
 
 </html>

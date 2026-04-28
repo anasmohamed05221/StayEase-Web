@@ -1,10 +1,12 @@
 <?php
 require_once __DIR__ . '/config.php';
 
-$city     = trim($_GET['city']     ?? '');
-$checkIn  = trim($_GET['check_in'] ?? '');
+$city     = trim($_GET['city']      ?? '');
+$checkIn  = trim($_GET['check_in']  ?? '');
 $checkOut = trim($_GET['check_out'] ?? '');
-$sort     = $_GET['sort'] ?? 'rating';
+$sort     = $_GET['sort']           ?? 'rating';
+$maxPrice = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 1000;
+$starsFilter = isset($_GET['stars']) ? array_map('intval', (array)$_GET['stars']) : [];
 
 $nights = 1;
 if ($checkIn && $checkOut) {
@@ -19,6 +21,20 @@ $orderBy = match($sort) {
     default      => 'avg_rating DESC',
 };
 
+// Build stars filter clause only if specific stars are selected
+$starsClause = '';
+$params = [':city' => $city, ':cityLike' => '%' . $city . '%', ':maxPrice' => $maxPrice];
+
+if (!empty($starsFilter)) {
+    $placeholders = [];
+    foreach ($starsFilter as $i => $s) {
+        $key = ':stars' . $i;
+        $placeholders[] = $key;
+        $params[$key] = $s;
+    }
+    $starsClause = 'AND h.stars IN (' . implode(',', $placeholders) . ')';
+}
+
 $stmt = $pdo->prepare("
     SELECT h.id, h.name, h.city, h.location, h.description, h.image, h.stars,
            MIN(r.price_per_night)      AS min_price,
@@ -28,8 +44,10 @@ $stmt = $pdo->prepare("
     LEFT JOIN rooms   r  ON r.hotel_id  = h.id AND r.is_available = 1
     LEFT JOIN reviews rv ON rv.hotel_id = h.id
     WHERE (:city = '' OR h.city LIKE :cityLike)
+    $starsClause
     GROUP BY h.id, h.name, h.city, h.location, h.description, h.image, h.stars
+    HAVING min_price IS NULL OR min_price <= :maxPrice
     ORDER BY $orderBy
 ");
-$stmt->execute([':city' => $city, ':cityLike' => '%' . $city . '%']);
+$stmt->execute($params);
 $hotels = $stmt->fetchAll();
