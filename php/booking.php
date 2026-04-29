@@ -1,211 +1,272 @@
 <?php
+// Include database connection file.
+// This file should create the $pdo connection.
 require_once 'config.php';
+
+// Start session so we can access $_SESSION['user_id'].
 session_start();
 
-function clean($value) {
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+// Get the action from the URL.
+// Example: booking.php?action=room
+$action = $_GET['action'] ?? '';
+
+// Helper function to return JSON responses to JavaScript.
+function send_json($data) {
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit;
 }
 
-function requireLogin() {
+/*
+|--------------------------------------------------------------------------
+| ACTION 1: Get selected room data
+|--------------------------------------------------------------------------
+| This action is used by booking.html.
+| JavaScript sends room_id to this file.
+| PHP fetches real room data from the database.
+*/
+if ($action === 'room') {
+
+    // User must be logged in before booking.
     if (!isset($_SESSION['user_id'])) {
-        header("Location: ../login.html");
-        exit;
+        send_json([
+            'success' => false,
+            'redirect' => 'login.html'
+        ]);
     }
-}
 
-requireLogin();
+    // Read room_id from URL.
+    // Example: booking.php?action=room&room_id=3
+    $room_id = $_GET['room_id'] ?? null;
 
-$action = $_GET['action'] ?? $_POST['action'] ?? '';
+    // If room_id is missing, return error.
+    if (!$room_id) {
+        send_json([
+            'success' => false,
+            'message' => 'Room ID is missing.'
+        ]);
+    }
 
-if ($action === 'show') {
-    $room_id = $_GET['room_id'] ?? 0;
-
+    // Get room data and hotel name from the database.
+    // JOIN is used because room data is in rooms table
+    // and hotel name is in hotels table.
     $stmt = $pdo->prepare("
-        SELECT rooms.*, hotels.name AS hotel_name, hotels.city
+        SELECT 
+            rooms.id,
+            rooms.name,
+            rooms.type,
+            rooms.price_per_night,
+            rooms.description,
+            rooms.image,
+            rooms.is_available,
+            hotels.name AS hotel_name
         FROM rooms
         JOIN hotels ON rooms.hotel_id = hotels.id
         WHERE rooms.id = ?
     ");
+
+    // Execute safely using prepared statement to prevent SQL injection.
     $stmt->execute([$room_id]);
     $room = $stmt->fetch();
 
+    // If room does not exist.
     if (!$room) {
-        die("Room not found.");
+        send_json([
+            'success' => false,
+            'message' => 'Room was not found.'
+        ]);
     }
 
-    if ($room['is_available'] != 1) {
-        die("This room is currently unavailable.");
+    // If room is marked unavailable.
+    if ((int)$room['is_available'] !== 1) {
+        send_json([
+            'success' => false,
+            'message' => 'This room is currently unavailable.'
+        ]);
     }
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>StayEase. | Confirm Booking</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/booking.css">
-</head>
-<body>
-
-  <nav class="navbar">
-    <div class="logo">StayEase.</div>
-    <div class="nav-links">
-      <a href="../index.html">Home</a>
-      <a href="../dashboard.html">Dashboard</a>
-      <a href="../login.html">Login</a>
-    </div>
-  </nav>
-
-  <main class="container">
-    <section class="card">
-      <span class="badge">Confirm Booking</span>
-      <h1>Complete Your Reservation</h1>
-
-      <div class="room-box">
-        <h2><?php echo clean($room['name']); ?></h2>
-        <p><strong>Hotel:</strong> <?php echo clean($room['hotel_name']); ?></p>
-        <p><strong>City:</strong> <?php echo clean($room['city']); ?></p>
-        <p><strong>Room Type:</strong> <?php echo clean($room['type']); ?></p>
-        <p><strong>Price Per Night:</strong> $<?php echo clean($room['price_per_night']); ?></p>
-      </div>
-
-      <form action="booking.php" method="post">
-        <input type="hidden" name="action" value="book">
-        <input type="hidden" name="room_id" value="<?php echo clean($room['id']); ?>">
-
-        <label for="check_in">Check-in Date</label>
-        <input type="date" id="check_in" name="check_in" required>
-
-        <label for="check_out">Check-out Date</label>
-        <input type="date" id="check_out" name="check_out" required>
-
-        <button type="submit">Confirm Booking</button>
-      </form>
-    </section>
-  </main>
-
-</body>
-</html>
-<?php
-    exit;
+    // Return room data to JavaScript.
+    send_json([
+        'success' => true,
+        'room' => $room
+    ]);
 }
 
-if ($action === 'book') {
+/*
+|--------------------------------------------------------------------------
+| ACTION 2: Create booking
+|--------------------------------------------------------------------------
+| This action runs when the user clicks Confirm & Pay Now.
+| It validates the data, checks availability, prevents overlap,
+| then inserts a new booking into the bookings table.
+*/
+if ($action === 'create') {
+
+    // User must be logged in.
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: ../login.html');
+        exit;
+    }
+
+    // user_id comes from session, not from the form.
+    // This is more secure because user cannot book for another user.
     $user_id = $_SESSION['user_id'];
-    $room_id = $_POST['room_id'] ?? 0;
-    $check_in = $_POST['check_in'] ?? '';
-    $check_out = $_POST['check_out'] ?? '';
 
-    if ($check_in == '' || $check_out == '') {
-        die("Please select check-in and check-out dates.");
+    // Booking data submitted from booking.html.
+    $room_id = $_POST['room_id'] ?? null;
+    $check_in = $_POST['check_in'] ?? null;
+    $check_out = $_POST['check_out'] ?? null;
+
+    // Basic validation: all required fields must exist.
+    if (!$room_id || !$check_in || !$check_out) {
+        die('Missing booking data.');
     }
 
-    if ($check_out <= $check_in) {
-        die("Check-out date must be after check-in date.");
+    // Server-side date validation.
+    // Check-out must be after check-in.
+    if (strtotime($check_out) <= strtotime($check_in)) {
+        die('Check-out date must be after check-in date.');
     }
 
-    $stmt = $pdo->prepare("SELECT * FROM rooms WHERE id = ?");
+    // Check that the selected room exists and is available.
+    $stmt = $pdo->prepare("SELECT is_available FROM rooms WHERE id = ?");
     $stmt->execute([$room_id]);
     $room = $stmt->fetch();
 
+    // If room does not exist.
     if (!$room) {
-        die("Room not found.");
+        die('Room not found.');
     }
 
-    if ($room['is_available'] != 1) {
-        die("This room is currently unavailable.");
+    // If room is not available.
+    if ((int)$room['is_available'] !== 1) {
+        die('This room is unavailable.');
     }
 
-    $overlap = $pdo->prepare("
+    /*
+    Overlap check:
+    This prevents two users from booking the same room in the same period.
+
+    Overlap condition:
+    old_check_in < new_check_out
+    AND
+    old_check_out > new_check_in
+
+    Example:
+    Old booking: 10 May to 15 May
+    New booking: 12 May to 18 May
+    This overlaps, so it must be rejected.
+    */
+    $overlapStmt = $pdo->prepare("
         SELECT id
         FROM bookings
         WHERE room_id = ?
         AND status != 'cancelled'
-        AND ? < check_out
-        AND ? > check_in
+        AND check_in < ?
+        AND check_out > ?
+        LIMIT 1
     ");
-    $overlap->execute([$room_id, $check_in, $check_out]);
 
-    if ($overlap->fetch()) {
-        die("This room is already booked for the selected dates.");
+    $overlapStmt->execute([$room_id, $check_out, $check_in]);
+    $overlap = $overlapStmt->fetch();
+
+    // If overlapping booking exists, reject the new booking.
+    if ($overlap) {
+        die('This room is already booked for the selected dates.');
     }
 
-    $start = new DateTime($check_in);
-    $end = new DateTime($check_out);
-    $nights = $start->diff($end)->days;
-    $total_price = $nights * $room['price_per_night'];
-
-    $insert = $pdo->prepare("
+    // Insert the booking into the database.
+    $insertStmt = $pdo->prepare("
         INSERT INTO bookings (user_id, room_id, check_in, check_out, status)
-        VALUES (?, ?, ?, ?, 'pending')
+        VALUES (?, ?, ?, ?, 'confirmed')
     ");
-    $insert->execute([$user_id, $room_id, $check_in, $check_out]);
 
+    $insertStmt->execute([
+        $user_id,
+        $room_id,
+        $check_in,
+        $check_out
+    ]);
+
+    // Get the new booking ID generated by the database.
     $booking_id = $pdo->lastInsertId();
 
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>StayEase. | Booking Confirmed</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/booking.css">
-</head>
-<body>
-
-  <nav class="navbar">
-    <div class="logo">StayEase.</div>
-    <div class="nav-links">
-      <a href="../index.html">Home</a>
-      <a href="../dashboard.html">Dashboard</a>
-      <a href="../my-bookings.html">My Bookings</a>
-    </div>
-  </nav>
-
-  <main class="container">
-    <section class="card success-card">
-      <span class="success-icon">✓</span>
-      <h1>Booking Confirmed</h1>
-      <p>Your reservation has been created successfully.</p>
-
-      <div class="detail-row">
-        <span>Booking ID</span>
-        <strong>#<?php echo clean($booking_id); ?></strong>
-      </div>
-
-      <div class="detail-row">
-        <span>Check-in</span>
-        <strong><?php echo clean($check_in); ?></strong>
-      </div>
-
-      <div class="detail-row">
-        <span>Check-out</span>
-        <strong><?php echo clean($check_out); ?></strong>
-      </div>
-
-      <div class="detail-row">
-        <span>Nights</span>
-        <strong><?php echo clean($nights); ?></strong>
-      </div>
-
-      <div class="detail-row">
-        <span>Total Price</span>
-        <strong>$<?php echo clean(number_format($total_price, 2)); ?></strong>
-      </div>
-
-      <a class="button-link" href="../dashboard.html">Go to Dashboard</a>
-      <a class="secondary-link" href="../my-bookings.html">View My Bookings</a>
-    </section>
-  </main>
-
-</body>
-</html>
-<?php
+    // Redirect user to confirmation page with booking_id.
+    header('Location: ../booking-confirm.html?booking_id=' . $booking_id);
     exit;
 }
 
-echo "Invalid booking action.";
-?>
+/*
+|--------------------------------------------------------------------------
+| ACTION 3: Get booking confirmation data
+|--------------------------------------------------------------------------
+| This action is used by booking-confirm.html.
+| It loads the booking details after successful booking.
+*/
+if ($action === 'confirmation') {
+
+    // User must be logged in to view booking confirmation.
+    if (!isset($_SESSION['user_id'])) {
+        send_json([
+            'success' => false,
+            'redirect' => 'login.html'
+        ]);
+    }
+
+    // Read booking_id from URL.
+    $booking_id = $_GET['booking_id'] ?? null;
+
+    // Current logged-in user.
+    $user_id = $_SESSION['user_id'];
+
+    // If booking_id is missing.
+    if (!$booking_id) {
+        send_json([
+            'success' => false,
+            'message' => 'Booking ID is missing.'
+        ]);
+    }
+
+    // Get booking details from bookings, rooms, and hotels.
+    // The condition bookings.user_id = ? protects user privacy.
+    // It prevents one user from viewing another user's booking.
+    $stmt = $pdo->prepare("
+        SELECT 
+            bookings.id,
+            bookings.check_in,
+            bookings.check_out,
+            bookings.status,
+            rooms.name AS room_name,
+            rooms.price_per_night,
+            rooms.image AS room_image,
+            hotels.name AS hotel_name
+        FROM bookings
+        JOIN rooms ON bookings.room_id = rooms.id
+        JOIN hotels ON rooms.hotel_id = hotels.id
+        WHERE bookings.id = ?
+        AND bookings.user_id = ?
+    ");
+
+    $stmt->execute([$booking_id, $user_id]);
+    $booking = $stmt->fetch();
+
+    // If booking does not exist or does not belong to this user.
+    if (!$booking) {
+        send_json([
+            'success' => false,
+            'message' => 'Booking was not found.'
+        ]);
+    }
+
+    // Return booking data to confirmation page.
+    send_json([
+        'success' => true,
+        'booking' => $booking
+    ]);
+}
+
+// If action is not room/create/confirmation.
+send_json([
+    'success' => false,
+    'message' => 'Invalid action.'
+]);

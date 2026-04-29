@@ -1,124 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <!-- Basic page setup -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Page title shown in the browser tab -->
   <title>StayEase - Booking</title>
 
+  <!-- StayEase font -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- External CSS file for booking and confirmation pages -->
   <link rel="stylesheet" href="css/booking.css">
 </head>
+
 <body>
 
-  <nav class="navbar">
-    <div class="logo">StayEase.</div>
+<!-- =====================================================
+     StayEase Shared Header
+     This header matches the home page / reference design.
+     ===================================================== -->
+<header class="topbar">
+  <div class="topbar-inner">
 
-    <div class="nav-links">
+    <!-- Website logo / brand name -->
+    <a href="index.html" class="brand">StayEase.</a>
+
+    <!-- Main navigation links -->
+    <nav class="main-nav">
       <a href="index.html">Book Now</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="admin.html">Admin</a>
+      <a href="my-bookings.html">Admin</a>
+    </nav>
+
+    <!-- Right side header icons -->
+    <div class="nav-icons">
+      <span>🔔</span>
+      <span>☻</span>
     </div>
-  </nav>
 
-  <main class="container">
+  </div>
+</header>
 
-    <a href="search-results.html" class="secondary-link">← Back to Search</a>
+<!-- =====================================================
+     Main Booking Page
+     This page receives room_id from Member 3's room page.
+     Example URL: booking.html?room_id=3
+     ===================================================== -->
+<main class="booking-page">
 
-    <section class="booking-page-layout">
+  <!-- Back link to return to search or room results page -->
+  <a href="search-results.html" class="back-link">← Back to Search</a>
 
-      <div class="booking-main">
+  <!-- Main layout: left side content + right side price card -->
+  <section class="booking-grid">
 
-        <section class="card room-preview-card">
-          <div class="room-preview">
-            <img src="assets/images/room.jpg" alt="Room Image" class="room-image">
+    <!-- =====================================================
+         Left Column
+         Contains selected room summary, date selection,
+         and guest information.
+         ===================================================== -->
+    <div class="left-column">
 
-            <div class="room-info">
-              <span class="badge">Premium Suite</span>
-              <h1>Executive City View Suite</h1>
-              <p>The Grand Stay Plaza, New York City</p>
-            </div>
-          </div>
-        </section>
+      <!-- Selected room details card.
+           The room data is loaded from the database using PHP.
+           JavaScript will place the real room info inside this card. -->
+      <section class="room-card" id="roomCard">
+        <div class="loading-card">Loading selected room...</div>
+      </section>
 
-        <section class="card">
+      <!-- Date selection card -->
+      <section class="step-card">
+
+        <!-- Section title -->
+        <div class="step-title">
+          <div class="step-icon">📅</div>
           <h2>1. Select Dates</h2>
+        </div>
 
-          <form action="php/booking.php" method="post">
-            <input type="hidden" name="action" value="book">
+        <!-- Check-in and check-out fields -->
+        <div class="date-grid">
 
-            <label for="room_id">Room ID</label>
-            <input type="number" id="room_id" name="room_id" required>
-
-            <label for="check_in">Check-in Date</label>
-            <input type="date" id="check_in" name="check_in" required>
-
-            <label for="check_out">Check-out Date</label>
-            <input type="date" id="check_out" name="check_out" required>
-
-            <h2>2. Guest Information</h2>
-
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" placeholder="John" required>
-
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
-
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="john.doe@example.com" required>
-
-            <label for="guests">Guests</label>
-            <input type="number" id="guests" name="guests" value="2" min="1" required>
-
-            <label for="requests">Special Requests</label>
-            <input type="text" id="requests" name="requests" placeholder="High floor, early check-in, etc.">
-
-            <button type="submit">Confirm & Pay Now</button>
-          </form>
-        </section>
-
-      </div>
-
-      <aside class="booking-sidebar">
-
-        <section class="card">
-          <h2>Price Summary</h2>
-
-          <div class="detail-row">
-            <span>Room Price</span>
-            <strong>$1,225.00</strong>
+          <div class="field-group">
+            <label for="checkIn">Check-in Date</label>
+            <input type="date" id="checkIn" name="check_in">
           </div>
 
-          <div class="detail-row">
-            <span>Cleaning Fee</span>
-            <strong>$45.00</strong>
+          <div class="field-group">
+            <label for="checkOut">Check-out Date</label>
+            <input type="date" id="checkOut" name="check_out">
           </div>
 
-          <div class="detail-row">
-            <span>Service Fee</span>
-            <strong>$152.40</strong>
+        </div>
+      </section>
+
+      <!-- Guest information card -->
+      <section class="step-card">
+
+        <!-- Section title -->
+        <div class="step-title">
+          <div class="step-icon">👤</div>
+          <h2>2. Guest Information</h2>
+        </div>
+
+        <!-- Booking form.
+             When submitted, it sends data to booking.php?action=create -->
+        <form id="bookingForm" action="php/booking.php?action=create" method="POST">
+
+          <!-- Hidden room_id.
+               Important: the user does NOT type room_id manually.
+               The room_id comes from the URL and is placed here automatically. -->
+          <input type="hidden" id="roomIdInput" name="room_id">
+
+          <!-- Guest fields for interface design and user experience -->
+          <div class="guest-grid">
+
+            <div class="field-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="John">
+            </div>
+
+            <div class="field-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="Doe">
+            </div>
+
+            <div class="field-group full">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="john.doe@example.com">
+            </div>
+
+            <div class="field-group">
+              <label for="guests">Guests</label>
+              <select id="guests">
+                <option>1 Guest</option>
+                <option selected>2 Adults</option>
+                <option>3 Guests</option>
+                <option>4 Guests</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="requests">Special Requests</label>
+              <input type="text" id="requests" placeholder="High floor, early check-in, etc.">
+            </div>
+
           </div>
 
-          <div class="price-box">
-            Total: $1,422.40
+          <!-- Hidden date inputs.
+               These receive the selected dates before submitting to PHP. -->
+          <input type="hidden" id="checkInHidden" name="check_in">
+          <input type="hidden" id="checkOutHidden" name="check_out">
+
+          <!-- Error message area -->
+          <p id="bookingError" class="error-message"></p>
+
+        </form>
+      </section>
+
+    </div>
+
+    <!-- =====================================================
+         Right Column
+         Contains live price summary and support information.
+         ===================================================== -->
+    <aside class="right-column">
+
+      <!-- Price summary card -->
+      <section class="price-card">
+        <h2>Price Summary</h2>
+
+        <div class="price-row">
+          <span><span id="nightsText">0</span> nights</span>
+          <strong>$<span id="basePrice">0.00</span></strong>
+        </div>
+
+        <div class="price-row">
+          <span>Cleaning fee</span>
+          <strong>$<span id="cleaningFee">45.00</span></strong>
+        </div>
+
+        <div class="price-row">
+          <span>Service fee</span>
+          <strong>$<span id="serviceFee">0.00</span></strong>
+        </div>
+
+        <div class="total-row">
+          <span>Total</span>
+          <strong>$<span id="totalPrice">0.00</span></strong>
+        </div>
+
+        <!-- Submit button.
+             It submits bookingForm even though it is outside the form tag. -->
+        <button class="pay-btn" type="submit" form="bookingForm">
+          🔒 Confirm & Pay Now
+        </button>
+
+        <p class="cancel-note">Free cancellation until Nov 12, 2026</p>
+      </section>
+
+      <!-- Support / trust card -->
+      <section class="support-card">
+
+        <div class="support-row">
+          <span class="support-icon green">✓</span>
+          <div>
+            <strong>Secure Payment</strong>
+            <p>Encrypted corporate-grade processing</p>
+          </div>
+        </div>
+
+        <div class="support-row">
+          <span class="support-icon blue">☎</span>
+          <div>
+            <strong>24/7 Support</strong>
+            <p>Concierge assistance for all bookings</p>
+          </div>
+        </div>
+
+      </section>
+
+    </aside>
+
+  </section>
+
+</main>
+
+<!-- =====================================================
+     StayEase Footer
+     Same footer style used across the website.
+     ===================================================== -->
+<footer class="footer">
+  <div class="footer-inner">
+
+    <div>
+      <strong>StayEase.</strong>
+      <p>© 2026 StayEase Corporate Travel & Hospitality Group.</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Support</a>
+      <a href="#">Contact Us</a>
+    </div>
+
+  </div>
+</footer>
+
+<!-- =====================================================
+     Internal JavaScript
+     This is still inside booking.html, not a separate JS file.
+     It connects the HTML page to booking.php.
+     ===================================================== -->
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const roomId = params.get("room_id");
+
+  const roomCard = document.getElementById("roomCard");
+  const roomIdInput = document.getElementById("roomIdInput");
+  const checkIn = document.getElementById("checkIn");
+  const checkOut = document.getElementById("checkOut");
+  const checkInHidden = document.getElementById("checkInHidden");
+  const checkOutHidden = document.getElementById("checkOutHidden");
+
+  const nightsText = document.getElementById("nightsText");
+  const basePrice = document.getElementById("basePrice");
+  const serviceFee = document.getElementById("serviceFee");
+  const totalPrice = document.getElementById("totalPrice");
+  const bookingError = document.getElementById("bookingError");
+
+  let pricePerNight = 0;
+  const cleaning = 45;
+
+  function showError(message) {
+    bookingError.textContent = message;
+  }
+
+  function calculatePrice() {
+    bookingError.textContent = "";
+
+    checkInHidden.value = checkIn.value;
+    checkOutHidden.value = checkOut.value;
+
+    if (!checkIn.value || !checkOut.value) {
+      nightsText.textContent = "0";
+      basePrice.textContent = "0.00";
+      serviceFee.textContent = "0.00";
+      totalPrice.textContent = "0.00";
+      return;
+    }
+
+    const start = new Date(checkIn.value);
+    const end = new Date(checkOut.value);
+    const nights = (end - start) / (1000 * 60 * 60 * 24);
+
+    if (nights <= 0) {
+      nightsText.textContent = "0";
+      basePrice.textContent = "0.00";
+      serviceFee.textContent = "0.00";
+      totalPrice.textContent = "0.00";
+      showError("Check-out date must be after check-in date.");
+      return;
+    }
+
+    const base = nights * pricePerNight;
+    const service = base * 0.12;
+    const total = base + cleaning + service;
+
+    nightsText.textContent = nights;
+    basePrice.textContent = base.toFixed(2);
+    serviceFee.textContent = service.toFixed(2);
+    totalPrice.textContent = total.toFixed(2);
+  }
+
+  async function loadRoom() {
+    if (!roomId) {
+      roomCard.innerHTML = `<div class="error-box">No room selected. Please go back and choose a room first.</div>`;
+      return;
+    }
+
+    try {
+      const response = await fetch(`php/booking.php?action=room&room_id=${encodeURIComponent(roomId)}`);
+      const data = await response.json();
+
+      if (data.redirect) {
+        window.location.href = data.redirect;
+        return;
+      }
+
+      if (!data.success) {
+        roomCard.innerHTML = `<div class="error-box">${data.message}</div>`;
+        return;
+      }
+
+      const room = data.room;
+      pricePerNight = parseFloat(room.price_per_night);
+      roomIdInput.value = room.id;
+
+      roomCard.innerHTML = `
+        <img src="${room.image || 'assets/images/room-placeholder.jpg'}" alt="Room Image" class="room-photo">
+
+        <div class="room-info">
+          <div class="room-badges">
+            <span class="badge">Premium Suite</span>
+            <span class="rating">★ 4.92 Reviews</span>
           </div>
 
-          <button type="submit" form="">Confirm & Pay Now</button>
+          <h1>${room.name}</h1>
+          <p class="location">📍 ${room.hotel_name}</p>
+          <p class="room-desc">${room.description || "A comfortable room prepared for your StayEase reservation."}</p>
+        </div>
+      `;
 
-          <p>Free cancellation until Nov 12, 2026</p>
-        </section>
+    } catch (error) {
+      roomCard.innerHTML = `<div class="error-box">Could not load room details.</div>`;
+    }
+  }
 
-        <section class="card">
-          <h2>Secure Payment</h2>
-          <p>Encrypted corporate-grade processing.</p>
+  checkIn.addEventListener("change", calculatePrice);
+  checkOut.addEventListener("change", calculatePrice);
 
-          <h2>24/7 Support</h2>
-          <p>Concierge assistance for all bookings.</p>
-        </section>
+  document.getElementById("bookingForm").addEventListener("submit", function(e) {
+    calculatePrice();
 
-      </aside>
+    if (!roomIdInput.value) {
+      e.preventDefault();
+      showError("Room data is missing.");
+      return;
+    }
 
-    </section>
+    if (!checkIn.value || !checkOut.value) {
+      e.preventDefault();
+      showError("Please select check-in and check-out dates.");
+      return;
+    }
 
-  </main>
+    if (new Date(checkOut.value) <= new Date(checkIn.value)) {
+      e.preventDefault();
+      showError("Check-out date must be after check-in date.");
+    }
+  });
+
+  loadRoom();
+</script>
 
 </body>
 </html>

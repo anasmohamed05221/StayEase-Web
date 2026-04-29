@@ -1,126 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <!-- Basic page setup -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Page title -->
   <title>StayEase - Booking Confirmation</title>
 
+  <!-- StayEase font -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- External CSS file -->
   <link rel="stylesheet" href="css/booking.css">
 </head>
+
 <body>
 
-  <nav class="navbar">
-    <div class="logo">StayEase.</div>
+<!-- =====================================================
+     StayEase Shared Header
+     Same header design used in booking.html.
+     ===================================================== -->
+<header class="topbar">
+  <div class="topbar-inner">
 
-    <div class="nav-links">
-      <a href="booking.html">Book Now</a>
+    <!-- Website brand -->
+    <a href="index.html" class="brand">StayEase.</a>
+
+    <!-- Navigation links -->
+    <nav class="main-nav">
+      <a href="index.html">Book Now</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="admin.html">Admin</a>
+      <a href="my-bookings.html">Admin</a>
+    </nav>
+
+    <!-- Header icons -->
+    <div class="nav-icons">
+      <span>🔔</span>
+      <span>☻</span>
     </div>
-  </nav>
 
-  <main class="container">
+  </div>
+</header>
 
-    <section class="success-card">
-      <span class="success-icon">✓</span>
-      <h1>Booking Confirmed!</h1>
-      <p>Your reservation is all set. We have sent a confirmation email to you.</p>
-      <span class="badge">Booking ID: SE-99201-B</span>
-    </section>
+<!-- =====================================================
+     Booking Confirmation Page
+     This page receives booking_id after booking is created.
+     Example URL: booking-confirm.html?booking_id=12
+     ===================================================== -->
+<main class="confirm-page">
 
-    <section class="booking-page-layout">
+  <!-- Success message at the top -->
+  <section class="success-head">
+    <div class="success-circle">✓</div>
+    <h1>Booking Confirmed!</h1>
+    <p>Your reservation is all set. We have saved your booking successfully.</p>
 
-      <div class="booking-main">
+    <!-- Booking code is filled dynamically using booking_id -->
+    <span class="booking-pill">
+      Booking ID: <strong id="bookingCode">Loading...</strong>
+    </span>
+  </section>
 
-        <section class="card room-preview-card">
-          <img src="assets/images/room.jpg" alt="Room Image" class="room-image">
+  <!-- Main confirmation layout -->
+  <section class="confirm-grid">
 
-          <div class="room-info">
-            <span class="badge">Confirmed</span>
-            <h2>Executive Skyline Suite</h2>
-            <p>The Grand Stay Plaza, New York</p>
+    <!-- Left side booking details.
+         JavaScript fills this area with real booking data from PHP/database. -->
+    <div class="confirm-main-card" id="confirmMain">
+      <div class="loading-card">Loading booking confirmation...</div>
+    </div>
 
-            <div class="detail-row">
-              <span>Check-in</span>
-              <strong>Mon, Oct 14, 2026</strong>
-            </div>
+    <!-- Right side confirmation cards -->
+    <aside class="confirm-side">
 
-            <div class="detail-row">
-              <span>Check-out</span>
-              <strong>Fri, Oct 18, 2026</strong>
-            </div>
+      <!-- Host information card -->
+      <section class="host-card">
+        <h3>Host Information</h3>
 
-            <div class="detail-row">
-              <span>Guests</span>
-              <strong>2 Guests</strong>
-            </div>
-
-            <div class="detail-row">
-              <span>Room Type</span>
-              <strong>1 King Bed</strong>
-            </div>
-
-            <div class="price-box">
-              Total Amount Paid: $840.00
-            </div>
+        <div class="host-row">
+          <div class="host-avatar">S</div>
+          <div>
+            <strong>Sarah Jenkins</strong>
+            <p>Concierge Manager</p>
           </div>
-        </section>
+        </div>
 
+        <button class="light-btn">✉ Contact Host</button>
+      </section>
+
+      <!-- Payment details card -->
+      <section class="payment-card">
+        <h3>Payment Details</h3>
+
+        <div class="price-row">
+          <span>Room total</span>
+          <strong>$<span id="paymentBase">0.00</span></strong>
+        </div>
+
+        <div class="price-row">
+          <span>Cleaning fee</span>
+          <strong>$45.00</strong>
+        </div>
+
+        <div class="price-row">
+          <span>Service fee</span>
+          <strong>$<span id="paymentService">0.00</span></strong>
+        </div>
+
+        <div class="total-row">
+          <span>Total Paid</span>
+          <strong>$<span id="paymentTotal">0.00</span></strong>
+        </div>
+
+        <a href="#" class="receipt-link">⇩ Download PDF Receipt</a>
+      </section>
+
+      <!-- Link to bookings/dashboard page -->
+      <a href="my-bookings.html" class="view-bookings-btn">View My Bookings</a>
+
+    </aside>
+
+  </section>
+
+  <!-- Extra information row matching the reference design -->
+  <section class="info-row">
+
+    <div class="info-item">
+      <span>🚌</span>
+      <div>
+        <strong>Travel Info</strong>
+        <p>The hotel is a short distance from the city center and airport routes.</p>
       </div>
+    </div>
 
-      <aside class="booking-sidebar">
+    <div class="info-item">
+      <span>📅</span>
+      <div>
+        <strong>Modify Stay</strong>
+        <p>Changes can be managed through the dashboard before check-in.</p>
+      </div>
+    </div>
 
-        <section class="card">
-          <h2>Host Information</h2>
-          <p><strong>Sarah Jenkins</strong></p>
-          <p>Concierge Manager</p>
+    <div class="info-item">
+      <span>🛡</span>
+      <div>
+        <strong>Safe Stay</strong>
+        <p>StayEase follows health and safety protocols for a comfortable visit.</p>
+      </div>
+    </div>
 
-          <a href="#" class="button-link">Contact Host</a>
-        </section>
+  </section>
 
-        <section class="card">
-          <h2>Payment Details</h2>
+</main>
 
-          <div class="detail-row">
-            <span>$195.00 x 4 nights</span>
-            <strong>$780.00</strong>
+<!-- =====================================================
+     StayEase Footer
+     ===================================================== -->
+<footer class="footer">
+  <div class="footer-inner">
+
+    <div>
+      <strong>StayEase.</strong>
+    </div>
+
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Support</a>
+      <a href="#">Contact Us</a>
+    </div>
+
+    <p>© 2026 StayEase. Corporate Travel & Hospitality Group.</p>
+
+  </div>
+</footer>
+
+<!-- =====================================================
+     Internal JavaScript
+     This loads real booking confirmation data from booking.php.
+     ===================================================== -->
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const bookingId = params.get("booking_id");
+
+  const confirmMain = document.getElementById("confirmMain");
+  const bookingCode = document.getElementById("bookingCode");
+
+  const paymentBase = document.getElementById("paymentBase");
+  const paymentService = document.getElementById("paymentService");
+  const paymentTotal = document.getElementById("paymentTotal");
+
+  function calculateNights(checkIn, checkOut) {
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+    return (end - start) / (1000 * 60 * 60 * 24);
+  }
+
+  async function loadBooking() {
+    if (!bookingId) {
+      confirmMain.innerHTML = `<div class="error-box">No booking ID found.</div>`;
+      bookingCode.textContent = "Not Found";
+      return;
+    }
+
+    try {
+      const response = await fetch(`php/booking.php?action=confirmation&booking_id=${encodeURIComponent(bookingId)}`);
+      const data = await response.json();
+
+      if (data.redirect) {
+        window.location.href = data.redirect;
+        return;
+      }
+
+      if (!data.success) {
+        confirmMain.innerHTML = `<div class="error-box">${data.message}</div>`;
+        bookingCode.textContent = "Not Found";
+        return;
+      }
+
+      const b = data.booking;
+
+      const nights = calculateNights(b.check_in, b.check_out);
+      const pricePerNight = parseFloat(b.price_per_night);
+      const base = nights * pricePerNight;
+      const cleaning = 45;
+      const service = base * 0.12;
+      const total = base + cleaning + service;
+
+      bookingCode.textContent = "SE-" + String(b.id).padStart(4, "0") + "-B";
+
+      paymentBase.textContent = base.toFixed(2);
+      paymentService.textContent = service.toFixed(2);
+      paymentTotal.textContent = total.toFixed(2);
+
+      confirmMain.innerHTML = `
+        <div class="confirm-image-wrap">
+          <img src="${b.room_image || 'assets/images/room-placeholder.jpg'}" alt="Room image" class="confirm-image">
+          <span class="confirmed-badge">Confirmed</span>
+        </div>
+
+        <div class="confirm-room-body">
+          <div class="confirm-room-header">
+            <div>
+              <h2>${b.room_name}</h2>
+              <p>📍 ${b.hotel_name}</p>
+            </div>
+
+            <div class="confirm-price">
+              <strong>$${total.toFixed(2)}</strong>
+              <span>Total Amount Paid</span>
+            </div>
           </div>
 
-          <div class="detail-row">
-            <span>Cleaning Fee</span>
-            <strong>$40.00</strong>
+          <div class="stay-dates">
+            <div>
+              <span>CHECK-IN</span>
+              <strong>${b.check_in}</strong>
+              <p>After 3:00 PM</p>
+            </div>
+
+            <div>
+              <span>CHECK-OUT</span>
+              <strong>${b.check_out}</strong>
+              <p>Before 11:00 AM</p>
+            </div>
           </div>
 
-          <div class="detail-row">
-            <span>Service Fee</span>
-            <strong>$20.00</strong>
+          <div class="amenities">
+            <span>👥 2 Guests</span>
+            <span>🛏 1 King Bed</span>
+            <span>🛜 High-speed WiFi</span>
           </div>
+        </div>
+      `;
 
-          <div class="price-box">
-            Total Paid: $840.00
-          </div>
+    } catch (error) {
+      confirmMain.innerHTML = `<div class="error-box">Could not load booking details.</div>`;
+      bookingCode.textContent = "Error";
+    }
+  }
 
-          <a href="#" class="secondary-link">Download PDF Receipt</a>
-        </section>
-
-        <a href="my-bookings.html" class="button-link">View My Bookings</a>
-
-      </aside>
-
-    </section>
-
-    <section class="card">
-      <h2>Travel Information</h2>
-      <p>The hotel is 15 minutes from JFK Airport by taxi or express shuttle.</p>
-
-      <h2>Modify Stay</h2>
-      <p>Changes can be made up to 24 hours before check-in through the dashboard.</p>
-
-      <h2>Safe Stay</h2>
-      <p>We follow all health and safety protocols to ensure a comfortable visit.</p>
-    </section>
-
-  </main>
+  loadBooking();
+</script>
 
 </body>
 </html>
