@@ -16,7 +16,6 @@ form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
 const dropdown = document.getElementById('sortDropdown');
 const trigger  = dropdown.querySelector('.custom-select-trigger');
 const options  = dropdown.querySelectorAll('.custom-option');
-const hidden   = dropdown.querySelector('input[type="hidden"]');
 
 trigger.addEventListener('click', () => dropdown.classList.toggle('open'));
 
@@ -25,7 +24,7 @@ options.forEach(opt => {
     options.forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');
     trigger.childNodes[0].textContent = opt.textContent;
-    hidden.value = opt.dataset.value;
+    form.querySelector('input[name="sort"]').value = opt.dataset.value;
     dropdown.classList.remove('open');
     form.submit();
   });
