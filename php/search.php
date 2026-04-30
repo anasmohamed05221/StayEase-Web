@@ -26,7 +26,7 @@ $orderBy = match($sort) {
 
 // Build stars filter clause only if specific stars are selected
 $starsClause = '';
-$params = [':city' => $city, ':cityLike' => '%' . $city . '%', ':maxPrice' => $maxPrice];
+$params = [':city' => $city, ':cityLike' => '%' . $city . '%', ':cityLike2' => '%' . $city . '%', ':cityLike3' => '%' . $city . '%', ':maxPrice' => $maxPrice];
 
 if (!empty($starsFilter)) {
     $placeholders = [];
@@ -45,7 +45,7 @@ $countStmt = $pdo->prepare("
         FROM hotels h
         LEFT JOIN rooms   r  ON r.hotel_id  = h.id AND r.is_available = 1
         LEFT JOIN reviews rv ON rv.hotel_id = h.id
-        WHERE (:city = '' OR h.city LIKE :cityLike)
+        WHERE (:city = '' OR h.city LIKE :cityLike OR h.location LIKE :cityLike2 OR h.name LIKE :cityLike3)
         $starsClause
         GROUP BY h.id
         HAVING MIN(r.price_per_night) IS NULL OR MIN(r.price_per_night) <= :maxPrice
@@ -63,7 +63,7 @@ $stmt = $pdo->prepare("
     FROM hotels h
     LEFT JOIN rooms   r  ON r.hotel_id  = h.id AND r.is_available = 1
     LEFT JOIN reviews rv ON rv.hotel_id = h.id
-    WHERE (:city = '' OR h.city LIKE :cityLike)
+    WHERE (:city = '' OR h.city LIKE :cityLike OR h.location LIKE :cityLike2 OR h.name LIKE :cityLike3)
     $starsClause
     GROUP BY h.id, h.name, h.city, h.location, h.description, h.image, h.stars
     HAVING min_price IS NULL OR min_price <= :maxPrice
