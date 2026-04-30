@@ -144,7 +144,7 @@
                       <small>Price for <?= $nights ?> night<?= $nights > 1 ? 's' : '' ?></small>
                       <strong><?= $minPrice ?></strong> <span>/ night</span>
                     </div>
-                    <a href="hotel-detail.php?id=<?= $h['id'] ?>" class="btn-view">View Deal</a>
+                    <a href="hotel-detail.html?hotel_id=<?= $h['id'] ?>" class="btn-view">View Deal</a>
                   </div>
                 </div>
               </div>

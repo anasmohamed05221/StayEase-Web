@@ -95,7 +95,7 @@
             $stars    = str_repeat('★', (int)$h['stars']) . str_repeat('☆', 5 - (int)$h['stars']);
             $minPrice = $h['min_price'] ? '$' . number_format($h['min_price'], 0) : 'N/A';
           ?>
-            <a href="hotel-detail.php?id=<?= $h['id'] ?>" class="hotel-card">
+            <a href="hotel-detail.html?hotel_id=<?= $h['id'] ?>" class="hotel-card">
               <div class="hotel-card-img">
                 <img src="<?= htmlspecialchars($h['image']) ?>" alt="<?= htmlspecialchars($h['name']) ?>">
               </div>
