@@ -29,7 +29,6 @@
         <h1 id="hotelName">Loading hotel...</h1>
         <p id="hotelDescription">Please wait while we load the hotel information.</p>
         <div class="hero-actions">
-          <a class="btn btn-light" id="reviewsLink" href="reviews.html">View Reviews</a>
           <a class="btn btn-outline-light" href="search-results.html">Back to Search</a>
         </div>
       </div>
@@ -90,11 +89,9 @@
     const hotelLocation = document.getElementById('hotelLocation');
     const hotelStars = document.getElementById('hotelStars');
     const hotelRating = document.getElementById('hotelRating');
-    const reviewsLink = document.getElementById('reviewsLink');
     const roomsGrid = document.getElementById('roomsGrid');
     const emptyState = document.getElementById('emptyState');
 
-    reviewsLink.href = `reviews.html?hotel_id=${encodeURIComponent(hotelId)}`;
 
     function escapeHtml(value) {
       return String(value ?? '')
