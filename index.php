@@ -32,7 +32,7 @@
     </div>
   </nav>
 
-  <section class="hero" style="background-image: url('assets/images/hero-bg.jpg');">
+  <section class="hero" style="background-image: url('assets/images/hero-bg-v3.jpg');">
 
     <h1>Find your next escape</h1>
     <p>Discover handpicked boutique hotels and luxury stays for your perfect getaway.</p>
