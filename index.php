@@ -44,6 +44,7 @@
         <div class="search-field-text">
           <label for="city">Destination</label>
           <input type="text" id="city" name="city" placeholder="Where are you going?" autocomplete="off">
+          <div class="city-tooltip">Enter a destination to start searching.</div>
         </div>
       </div>
 
@@ -52,6 +53,7 @@
         <div class="search-field-text">
           <label for="check_in">Check-in</label>
           <input type="date" id="check_in" name="check_in" placeholder="Add date">
+          <div class="date-tooltip" id="dateError">Check-in must be before check-out.</div>
         </div>
       </div>
 
@@ -70,11 +72,6 @@
 
     </form>
 
-    <!-- Shown by main.js if check-out is before check-in -->
-    <p class="form-error" id="dateError">
-      <i class="fa-solid fa-circle-exclamation"></i>
-      Check-out date must be after check-in date.
-    </p>
 
   </section>
 

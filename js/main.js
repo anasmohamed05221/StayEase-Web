@@ -1,17 +1,3 @@
-/* =============================================================
-   js/main.js — StayEase Frontend JavaScript
-   Member 2: Mohamed Gamil
-
-   This file handles:
-   1. Search form date validation (check-out must be after check-in)
-   2. Auto-filling today's date as the minimum selectable date
-   3. Reading URL params to display the search summary on results page
-   4. Price range slider live update
-   5. Wishlist heart toggle
-   6. Dynamic night-count label on result cards (computed from URL dates)
-   ============================================================= */
-
-// ── 1. Run everything after the HTML is fully loaded ──────────────────────
 document.addEventListener('DOMContentLoaded', function () {
 
   setMinDates();
@@ -23,11 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-/* =============================================================
-   FUNCTION: setMinDates
-   Prevents users from selecting past dates.
-   Sets the minimum value of both date inputs to today.
-============================================================= */
 function setMinDates() {
   var today = new Date().toISOString().split('T')[0]; // format: "2024-10-24"
 
@@ -73,8 +54,11 @@ function initSearchValidation() {
     if (cityInput && cityInput.value.trim() === '') {
       e.preventDefault();
       cityInput.focus();
-      cityInput.style.outline = '2px solid #DC2626';
-      setTimeout(function () { cityInput.style.outline = ''; }, 2000);
+      var cityTooltip = document.querySelector('.city-tooltip');  // grab the tooltip div
+      cityTooltip.classList.add('visible');                       // show it on failed submit
+      setTimeout(function () {         
+        cityTooltip.classList.remove('visible');                // hide it again                           // after 2 seconds...cityTooltip.classList.remove('visible');                // hide it again
+      }, 2000);
       return;
     }
 
@@ -91,13 +75,7 @@ function initSearchValidation() {
         if (errorEl) errorEl.classList.add('visible');
 
         // Highlight the search bar border to draw attention
-        var searchBox = document.querySelector('.search-box');
-        if (searchBox) {
-          searchBox.style.border = '2px solid #DC2626';
-          setTimeout(function () {
-            searchBox.style.border = '';
-          }, 2000);
-        }
+        setTimeout(function () { errorEl.classList.remove('visible'); }, 2000);
 
         return; // stop here
       }

@@ -178,6 +178,7 @@ img { display: block; max-width: 100%; }
 /* Each input group (icon + label + input) */
 .search-field {
   display: flex;
+  position: relative;
   align-items: center;
   gap: 10px;
   padding: 8px 20px;
@@ -832,18 +833,68 @@ img { display: block; max-width: 100%; }
 .empty-state p  { font-size: 14px; color: var(--muted); }
  
 /* ── 13. Validation Error Message (JS form feedback) ── */
-.form-error {
-  background: #FEF2F2;
-  color: var(--danger);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: var(--radius-sm);
-  margin-top: 12px;
-  display: none;          /* shown by JS when validation fails */
+.city-tooltip {
+    display: none;
+    position: absolute;
+    bottom: -34px;
+    left: 4px;
+    background: var(--danger);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    z-index: 10;
 }
- 
-.form-error.visible { display: block; }
+
+.city-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 16px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid var(--danger);
+}
+
+.city-tooltip.visible {
+    display: block;
+}
+
+
+.date-tooltip {
+    display: none;
+    position: absolute;
+    bottom: -34px;
+    left: 5px;
+    background: var(--danger);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.date-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 16px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid var(--danger);
+}
+
+.date-tooltip.visible {
+    display: block;
+}
  
 
 .pagination {
