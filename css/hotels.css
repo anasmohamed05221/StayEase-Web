@@ -189,6 +189,11 @@ a {
   color: var(--primary);
 }
 
+.btn-gold {
+  background: #D4900A !important;
+  color: #fff !important;
+}
+
 .btn-outline-light {
   color: var(--white);
   border-color: rgba(255,255,255,.45);

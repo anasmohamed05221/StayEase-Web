@@ -36,7 +36,7 @@
   <div class="hotel-info">
     <h2><?= htmlspecialchars($hotel['name']) ?></h2>
     <p class="rating">
-      ⭐ <?= $hotel['avg_rating'] ?? 'N/A' ?> / 5 · Based on
+      <i class="fa-solid fa-star"></i> <?= $hotel['avg_rating'] ?? 'N/A' ?> / 5 · Based on
       <?= $hotel['review_count'] ?> review<?= $hotel['review_count'] != 1 ? 's' : '' ?>
     </p>
   </div>

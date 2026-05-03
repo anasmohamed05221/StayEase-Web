@@ -30,6 +30,7 @@
         <p id="hotelDescription">Please wait while we load the hotel information.</p>
         <div class="hero-actions">
           <a class="btn btn-outline-light" href="search-results.html">Back to Search</a>
+          <a class="btn btn-gold" id="reviewsBtn" href="#">Reviews</a>
         </div>
       </div>
     </section>
@@ -81,6 +82,7 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const hotelId = params.get('hotel_id') || '1';
+    document.getElementById('reviewsBtn').href = `reviews_page.php?hotel_id=${encodeURIComponent(hotelId)}`;
 
     const hotelHero = document.getElementById('hotelHero');
     const hotelName = document.getElementById('hotelName');
