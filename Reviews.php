@@ -1,3 +1,20 @@
+<?php
+require_once 'config.php';
+
+$hotel_id = isset($_GET['hotel_id']) ? intval($_GET['hotel_id']) : 1;
+
+$stmt = $pdo->prepare("
+    SELECT h.id, h.name, h.image,
+           ROUND(AVG(r.rating), 1) AS avg_rating,
+           COUNT(r.id) AS review_count
+    FROM hotels h
+    LEFT JOIN reviews r ON r.hotel_id = h.id
+    WHERE h.id = ?
+    GROUP BY h.id
+");
+$stmt->execute([$hotel_id]);
+$hotel = $stmt->fetch(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,18 +48,20 @@
   <main class="reviews-container">
 
     <section class="hotel-header">
-      <div class="hotel-info">
-        <h2>The Grand Stay Plaza</h2>
-        <p class="rating">⭐ 4.9 / 5 · Based on reviews</p>
-      </div>
+  <div class="hotel-info">
+    <h2><?= htmlspecialchars($hotel['name']) ?></h2>
+    <p class="rating">
+      ⭐ <?= $hotel['avg_rating'] ?? 'N/A' ?> / 5 · Based on
+      <?= $hotel['review_count'] ?> review<?= $hotel['review_count'] != 1 ? 's' : '' ?>
+    </p>
+  </div>
 
-      <img 
-        src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500" 
-        class="hotel-img" 
-        alt="Hotel Image"
-      >
-    </section>
-
+  <img 
+    src="<?= htmlspecialchars($hotel['image']) ?>" 
+    class="hotel-img" 
+    alt="<?= htmlspecialchars($hotel['name']) ?>"
+  >
+</section>
     <div class="reviews-layout">
 
       <div class="reviews-left">
@@ -76,7 +95,7 @@
           <h2>Share Your Experience</h2>
 
           <form action="php/reviews.php?action=submit" method="POST">
-            <input type="hidden" name="hotel_id" value="1">
+    <input type="hidden" name="hotel_id" value="<?= $hotel['id'] ?>">
 
             <label>Your Rating</label>
             <select name="rating" required>
