@@ -1,20 +1,5 @@
-<?php
-require_once 'config.php';
+<?php require_once 'php/reviews.php'; ?>
 
-$hotel_id = isset($_GET['hotel_id']) ? intval($_GET['hotel_id']) : 1;
-
-$stmt = $pdo->prepare("
-    SELECT h.id, h.name, h.image,
-           ROUND(AVG(r.rating), 1) AS avg_rating,
-           COUNT(r.id) AS review_count
-    FROM hotels h
-    LEFT JOIN reviews r ON r.hotel_id = h.id
-    WHERE h.id = ?
-    GROUP BY h.id
-");
-$stmt->execute([$hotel_id]);
-$hotel = $stmt->fetch(PDO::FETCH_ASSOC);
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +21,7 @@ $hotel = $stmt->fetch(PDO::FETCH_ASSOC);
         <a href="index.php">Home</a>
         <a href="search-results.php">Discover</a>
         <a href="about.html">About</a>
-        <a href="reviews.html" class="active">Reviews</a>
+        <a href="reviews_page.php">Reviews</a>
       </div>
       <div class="nav-auth">
         <a href="dashboard.html" class="profile-icon"><i class="fa-regular fa-circle-user"></i></a>
@@ -66,52 +51,68 @@ $hotel = $stmt->fetch(PDO::FETCH_ASSOC);
 
       <div class="reviews-left">
 
-        <div class="review-card big">
-          <h3>Sarah Ahmed</h3>
-          <div class="stars">★★★★★</div>
-          <p>
-            Amazing experience! The service was excellent and the rooms were very clean.
-          </p>
-        </div>
-
-        <div class="review-grid">
-          <div class="review-card small">
-            <h4>Great Stay</h4>
-            <div class="stars">★★★★★</div>
+        <?php if (empty($reviews)): ?>
+          <p>No reviews yet. Be the first to review!</p>
+        <?php else: ?>
+          <div class="review-card big">
+            <h3><?= htmlspecialchars($reviews[0]['user_name']) ?></h3>
+            <div class="stars"><?= str_repeat('★', $reviews[0]['rating']) . str_repeat('☆', 5 - $reviews[0]['rating']) ?></div>
+            <p><?= htmlspecialchars($reviews[0]['comment']) ?></p>
           </div>
 
-          <div class="review-card small">
-            <h4>Loved It</h4>
-            <div class="stars">★★★★☆</div>
+          <div class="review-grid">
+            <?php for ($i = 1; $i < count($reviews); $i++): ?>
+              <div class="review-card small">
+                <h4><?= htmlspecialchars($reviews[$i]['user_name']) ?></h4>
+                <div class="stars"><?= str_repeat('★', $reviews[$i]['rating']) . str_repeat('☆', 5 - $reviews[$i]['rating']) ?></div>
+              </div>
+            <?php endfor; ?>
           </div>
-
-          <div class="review-card small">
-            <h4>Very Clean</h4>
-            <div class="stars">★★★★★</div>
-          </div>
-        </div>
+        <?php endif; ?>
 
         <div class="form-card">
           <h2>Share Your Experience</h2>
 
-          <form action="php/reviews.php?action=submit" method="POST">
-    <input type="hidden" name="hotel_id" value="<?= $hotel['id'] ?>">
+          <?php if (!isset($_SESSION['user_id'])): ?>
+            <p>You must <a href="login.html">log in</a> to leave a review.</p>
 
-            <label>Your Rating</label>
-            <select name="rating" required>
-              <option value="">Choose rating</option>
-              <option value="5">★★★★★</option>
-              <option value="4">★★★★☆</option>
-              <option value="3">★★★☆☆</option>
-              <option value="2">★★☆☆☆</option>
-              <option value="1">★☆☆☆☆</option>
-            </select>
+          <?php elseif ($already_reviewed): ?>
+            <p>You have already reviewed this hotel.</p>
 
-            <label>Your Review</label>
-            <textarea name="comment" placeholder="Tell us about your stay..." required></textarea>
+          <?php elseif (!$has_stayed): ?>
+            <p>You can only review hotels you have stayed at.</p>
 
-            <button type="submit">Submit Review</button>
-          </form>
+          <?php else: ?>
+            <form action="php/reviews.php?action=submit" method="POST">
+              <input type="hidden" name="action" value="submit">
+              <input type="hidden" name="hotel_id" value="<?= $hotel['id'] ?>">
+
+              <label>Which stay are you reviewing?</label>
+              <select name="booking_id" required>
+                <option value="">Select a stay</option>
+                <?php foreach ($past_stays as $s): ?>
+                  <option value="<?= $s['id'] ?>">
+                    <?= htmlspecialchars($s['room_name']) ?> : <?= $s['check_in'] ?> to <?= $s['check_out'] ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+
+              <label>Your Rating</label>
+              <select name="rating" required>
+                <option value="">Choose rating</option>
+                <option value="5">★★★★★</option>
+                <option value="4">★★★★☆</option>
+                <option value="3">★★★☆☆</option>
+                <option value="2">★★☆☆☆</option>
+                <option value="1">★☆☆☆☆</option>
+              </select>
+
+              <label>Your Review</label>
+              <textarea name="comment" placeholder="Tell us about your stay..." required></textarea>
+
+              <button type="submit">Submit Review</button>
+            </form>
+          <?php endif; ?>
         </div>
 
       </div>
@@ -119,7 +120,7 @@ $hotel = $stmt->fetch(PDO::FETCH_ASSOC);
       <div class="reviews-right">
         <div class="recommend-card">
           <h3>Highly Recommended</h3>
-          <p>95% of guests recommend this hotel.</p>
+          <p><?= $recommend_pct ?>% of guests recommend this hotel.</p>
         </div>
       </div>
 

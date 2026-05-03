@@ -23,7 +23,7 @@
         <a href="index.php">Home</a>
         <a href="search-results.php" class="active">Discover</a>
         <a href="about.html">About</a>
-        <a href="reviews.html">Reviews</a>
+        <a href="reviews_page.php">Reviews</a>
       </div>
       <div class="nav-auth">
         <a href="dashboard.html" class="profile-icon"><i class="fa-regular fa-circle-user"></i></a>
