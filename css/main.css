@@ -49,7 +49,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   height: 64px;
-  gap: 48px;
+  position: relative;
 }
  
 /* Logo */
@@ -68,7 +68,9 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   gap: 4px;
-  flex: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
  
 .nav-links a {
@@ -84,12 +86,20 @@ img { display: block; max-width: 100%; }
   color: var(--white);
   background: rgba(255,255,255,0.12);
 }
+
+.nav-links a.active {
+  color: var(--white);
+  background: transparent;
+  border-bottom: 2px solid var(--white);
+  border-radius: 0;
+  padding-bottom: 6px;
+}
  
 /* Right side auth buttons */
 .nav-auth {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   margin-left: auto;
 }
  
@@ -102,23 +112,23 @@ img { display: block; max-width: 100%; }
   transition: all 0.2s ease;
 }
  
-.nav-auth a:hover { color: var(--white); }
+.nav-auth a:hover {
+  background: rgba(255,255,255,0.12);
+  color: var(--white); 
+}
 
 .nav-auth a.profile-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 22px;
   line-height: 1;
 }
- 
-.btn-login {
-  border: 1.5px solid rgba(255,255,255,0.6) !important;
-  border-radius: 100px !important;
-  font-weight: 600 !important;
-}
- 
-.btn-login:hover {
-  background: var(--white) !important;
-  color: var(--primary) !important;
-  border-color: var(--white) !important;
+
+.nav-user {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
 }
  
 /* ── 4. Hero Section ── */
@@ -525,7 +535,60 @@ img { display: block; max-width: 100%; }
 .footer-links a:hover { color: var(--text); }
  
 .footer-copy { font-size: 12px; color: #94A3B8; }
- 
+
+/* ── Auth Gate (logged-out dashboard state) ── */
+.auth-gate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 160px);
+  padding: 48px 24px;
+}
+
+.auth-gate-card {
+  text-align: center;
+  max-width: 360px;
+}
+
+.auth-gate-card i {
+  font-size: 56px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.auth-gate-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.auth-gate-card p {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.auth-gate-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.auth-gate-btn {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  transition: opacity 0.2s ease;
+}
+
+.auth-gate-btn:hover { opacity: 0.7; }
+
+.auth-gate-sep {
+  font-size: 14px;
+  color: var(--muted);
+}
+
 /* ── 11. Search Results Page ── */
 .results-page { padding: 40px 24px; }
  

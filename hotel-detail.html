@@ -5,21 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StayEase. | Hotel Rooms</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/hotels.css" />
 </head>
 <body>
   <nav class="navbar">
-    <div class="nav-container">
-      <a class="logo" href="index.html">StayEase.</a>
+    <div class="container nav-inner">
+      <a href="index.php" class="logo">StayEase<span>.</span></a>
       <div class="nav-links">
-        <a class="active" href="index.html">Find Stays</a>
-        <a href="my-bookings.html">My Bookings</a>
-        <a href="#">Deals</a>
-        <a href="about.html">Support</a>
+        <a href="index.php">Home</a>
+        <a href="search-results.php">Discover</a>
+        <a href="reviews_page.php">Reviews</a>
+        <a href="about.html">About us</a>
       </div>
-      <div class="nav-actions">
-        <a href="login.html">Login</a>
-        <a class="signup" href="register.html">Sign Up</a>
+      <div class="nav-auth">
+        <a href="dashboard.php" class="profile-icon"><i class="fa-regular fa-circle-user"></i><span class="nav-user" id="navUser"></span></a>
       </div>
     </div>
   </nav>
@@ -28,7 +29,7 @@
     <section class="hotel-intro">
       <div>
         <p class="breadcrumb">Home › Hotels › <span id="hotelNameSmall">Hotel</span></p>
-        <h1 id="hotelName">Loading hotel...</h1>
+        <h2 id="hotelName">Loading hotel...</h2>
         <p id="hotelInfo">Please wait while we load the hotel details.</p>
       </div>
       <a class="soft-btn" id="reviewsLink" href="reviews.html">View Reviews</a>
@@ -51,7 +52,7 @@
         <button class="filter active" data-type="all">All Rooms</button>
         <button class="filter" data-type="Standard">Standard</button>
         <button class="filter" data-type="Suite">Suite</button>
-        <button class="filter" data-type="Family">Family</button>
+        <button class="filter" data-type="Deluxe">Deluxe</button>
       </div>
     </section>
 
@@ -61,85 +62,19 @@
   </main>
 
   <footer class="footer">
-    <strong>StayEase.</strong>
-    <span>© 2024 StayEase. Effortless efficiency for every guest.</span>
+    <div class="footer-inner">
+      <div class="footer-logo">StayEase</div>
+      <div class="footer-links">
+        <a href="about.html">About Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help Center</a>
+        <a href="#">Partners</a>
+      </div>
+      <p class="footer-copy">© 2024 StayEase Inc. All rights reserved.</p>
+    </div>
   </footer>
 
-  <script>
-    const params = new URLSearchParams(location.search);
-    const hotelId = params.get('hotel_id') || 1;
-    let allRooms = [];
-
-    function esc(text) {
-      return String(text ?? '').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
-    }
-
-    function stars(n) {
-      return '★'.repeat(Number(n || 0)) + '☆'.repeat(5 - Number(n || 0));
-    }
-
-    function showRooms(type = 'all') {
-      const grid = document.getElementById('roomsGrid');
-      const rooms = type === 'all' ? allRooms : allRooms.filter(r => String(r.type).toLowerCase() === type.toLowerCase());
-
-      if (rooms.length === 0) {
-        grid.innerHTML = '<div class="empty">No rooms found for this filter.</div>';
-        return;
-      }
-
-      grid.innerHTML = rooms.map(room => `
-        <article class="room-card">
-          <div class="room-image">
-            <img src="${esc(room.image || 'assets/images/room1.jpg')}" alt="${esc(room.name)}">
-            <span class="tag ${room.is_available == 1 ? '' : 'danger'}">${room.is_available == 1 ? esc(room.type) : 'Unavailable'}</span>
-          </div>
-          <div class="room-body">
-            <div class="room-title-row">
-              <h3>${esc(room.name)}</h3>
-              <strong>$${Number(room.price_per_night).toFixed(0)}</strong>
-            </div>
-            <p>📍 ${esc(document.getElementById('hotelCity').textContent)}</p>
-            <div class="room-icons">
-              <span>🛏 ${esc(room.type)}</span>
-              <span>📐 45m²</span>
-              <span>📶 Free</span>
-            </div>
-            <a class="primary-btn" href="room-detail.html?room_id=${room.id}">View Details</a>
-          </div>
-        </article>
-      `).join('');
-    }
-
-    fetch(`php/hotels.php?action=hotel&hotel_id=${hotelId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.success) throw new Error(data.message);
-
-        const h = data.hotel;
-        allRooms = data.rooms;
-
-        document.getElementById('hotelName').textContent = h.name;
-        document.getElementById('hotelNameSmall').textContent = h.name;
-        document.getElementById('hotelInfo').textContent = `${h.location} • ${data.average_rating}/5 (${data.review_count} Reviews)`;
-        document.getElementById('hotelCity').textContent = h.city;
-        document.getElementById('hotelDesc').textContent = h.description;
-        document.getElementById('hotelStars').textContent = stars(h.stars);
-        document.getElementById('reviewsLink').href = `reviews.html?hotel_id=${hotelId}`;
-        document.getElementById('hotelCover').style.backgroundImage = `linear-gradient(90deg, rgba(15,23,42,.75), rgba(15,23,42,.15)), url('${h.image || 'assets/images/hotel1.jpg'}')`;
-
-        showRooms();
-      })
-      .catch(error => {
-        document.getElementById('roomsGrid').innerHTML = `<div class="empty">${esc(error.message)}</div>`;
-      });
-
-    document.querySelectorAll('.filter').forEach(button => {
-      button.onclick = () => {
-        document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
-        button.classList.add('active');
-        showRooms(button.dataset.type);
-      };
-    });
-  </script>
+  <script src="js/hotel-detail.js"></script>
 </body>
 </html>

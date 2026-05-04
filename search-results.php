@@ -1,4 +1,4 @@
-<?php require_once 'php/search.php'; ?>
+<?php session_start(); require_once 'php/search.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,12 +22,11 @@
       <div class="nav-links">
         <a href="index.php">Home</a>
         <a href="search-results.php" class="active">Discover</a>
-        <a href="about.html">About</a>
         <a href="reviews_page.php">Reviews</a>
+        <a href="about.html">About us</a>
       </div>
       <div class="nav-auth">
-        <a href="dashboard.html" class="profile-icon"><i class="fa-regular fa-circle-user"></i></a>
-        <a href="login.html" class="btn-login">Login</a>
+        <a href="dashboard.php" class="profile-icon"><i class="fa-regular fa-circle-user"></i><?php if (!empty($_SESSION['user_name'])): ?> <span class="nav-user"><?= htmlspecialchars($_SESSION['user_name']) ?></span><?php endif; ?></a>
       </div>
     </div>
   </nav>

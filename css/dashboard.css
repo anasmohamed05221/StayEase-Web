@@ -1,76 +1,23 @@
-/* =========================================================
-   StayEase. - Member 5 Dashboard CSS
-   File: css/dashboard.css
-   Pages: dashboard.html, my-bookings.html
-   ========================================================= */
-
-/* 01 — DESIGN SYSTEM VARIABLES */
+/* Extra color tokens not in main.css */
 :root {
-  --primary:      #2563EB;
-  --primary-dark: #1D4ED8;
-  --primary-light:#EFF6FF;
-  --bg:           #EEF2F7;
-  --white:        #FFFFFF;
-  --gray-input:   #F1F5F9;
-  --gray-border:  #E2E8F0;
-  --text:         #0F172A;
-  --muted:        #64748B;
-  --success:      #16A34A;
-  --danger:       #DC2626;
-
   --warning-bg:   #FEF3C7;
   --warning-text: #B45309;
-
   --success-bg:   #DCFCE7;
   --danger-bg:    #FEE2E2;
-
-  --radius-sm:    8px;
-  --radius-md:    12px;
-  --radius-lg:    20px;
-
-  --shadow: 0 1px 3px rgba(0,0,0,.08),
-            0 4px 16px rgba(0,0,0,.06);
 }
 
-/* 02 — RESET */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+body { font-size: 15px; }
 
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 15px;
-  line-height: 1.6;
-}
+button, a { transition: all 0.2s ease; }
 
-/* 03 — GLOBAL ELEMENTS */
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-button,
-a {
-  transition: all 0.2s ease;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-/* 04 — PAGE WRAPPER */
+/* Page Wrapper */
 .dashboard-page {
   max-width: 1100px;
   margin: 0 auto;
   padding: 32px 24px 64px;
 }
 
-/* 05 — DASHBOARD HEADER */
+/* Dashboard Header */
 .dashboard-header {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -105,7 +52,7 @@ img {
   flex-wrap: wrap;
 }
 
-/* 06 — BUTTONS */
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -141,12 +88,13 @@ img {
 }
 
 .btn-danger {
-  background: var(--danger);
-  color: var(--white);
+  background: var(--white);
+  color: var(--danger);
 }
 
 .btn-danger:hover {
-  opacity: 0.9;
+  background: var(--danger);
+  color: var(--white);
   transform: translateY(-1px);
 }
 
@@ -158,7 +106,7 @@ button:disabled {
   transform: none;
 }
 
-/* 07 — STATS GRID */
+/* Stats Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -200,7 +148,7 @@ button:disabled {
   color: var(--muted);
 }
 
-/* 08 — QUICK LINKS */
+/* Quick Links */
 .quick-links {
   background: var(--white);
   border-radius: var(--radius-lg);
@@ -254,12 +202,8 @@ button:disabled {
   margin-bottom: 16px;
 }
 
-/* 09 — BOOKINGS PAGE HEADER */
+/* Bookings Page Header */
 .bookings-header {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  padding: 32px;
-  box-shadow: var(--shadow);
   margin-bottom: 24px;
 }
 
@@ -269,78 +213,8 @@ button:disabled {
   margin-bottom: 8px;
 }
 
-.bookings-header p {
-  color: var(--muted);
-}
 
-/* 10 — BOOKING TABLE CARD */
-.table-card {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  border: 1px solid var(--gray-border);
-}
-
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.bookings-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 850px;
-}
-
-.bookings-table thead {
-  background: var(--gray-input);
-}
-
-.bookings-table th {
-  padding: 18px 20px;
-  text-align: left;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--gray-border);
-}
-
-.bookings-table td {
-  padding: 20px;
-  border-bottom: 1px solid var(--gray-border);
-  font-size: 14px;
-  color: var(--text);
-  vertical-align: middle;
-}
-
-.bookings-table tbody tr:hover {
-  background: var(--primary-light);
-}
-
-.bookings-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.hotel-name {
-  font-weight: 800;
-  color: var(--text);
-}
-
-.room-name {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 2px;
-}
-
-.price {
-  font-weight: 800;
-  color: var(--primary);
-}
-
-/* 11 — STATUS BADGES */
+/* Status Badges */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -368,55 +242,8 @@ button:disabled {
   color: var(--danger);
 }
 
-/* 12 — CANCEL FORM */
-.cancel-form {
-  display: inline-block;
-}
 
-.cancel-btn {
-  min-height: 36px;
-  padding: 0 14px;
-  border-radius: 10px;
-  border: none;
-  background: var(--danger);
-  color: var(--white);
-  font-size: 13px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.cancel-btn:hover {
-  opacity: 0.9;
-}
-
-.no-action {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-/* 13 — EMPTY STATE */
-.empty-state {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  padding: 48px 24px;
-  text-align: center;
-  border: 1px solid var(--gray-border);
-}
-
-.empty-state h2 {
-  font-size: 24px;
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-
-.empty-state p {
-  color: var(--muted);
-  margin-bottom: 24px;
-}
-
-/* 14 — ALERT MESSAGES */
+/* Alert Messages */
 .alert {
   padding: 16px 18px;
   border-radius: var(--radius-md);
@@ -437,45 +264,7 @@ button:disabled {
   border: 1px solid var(--danger);
 }
 
-/* 15 — SIMPLE NAVBAR SUPPORT */
-.navbar {
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-border);
-  padding: 18px 24px;
-}
-
-.navbar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--primary);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.nav-links a {
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-  color: var(--primary);
-}
-
-/* 16 — RESPONSIVE DESIGN */
+/* Responsive */
 @media (max-width: 900px) {
   .dashboard-header {
     flex-direction: column;
@@ -511,14 +300,138 @@ button:disabled {
     font-size: 32px;
   }
 
-  .navbar-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
+}
+/* — BOOKING CARDS — */
+#bookingsList { display: flex; flex-direction: column; gap: 16px; }
 
-  .nav-links {
-    flex-wrap: wrap;
-    gap: 14px;
-  }
+.booking-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.booking-card-left { flex: 1; min-width: 0; }
+
+.booking-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+
+.booking-type {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    color: var(--muted); letter-spacing: 0.05em;
+}
+
+.booking-card-left h3 {
+    font-size: 17px; font-weight: 700; margin-bottom: 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.booking-room, .booking-location {
+    font-size: 13px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+}
+
+.booking-card-mid {
+    display: flex; align-items: center; gap: 16px; padding: 0 24px;
+    border-left: 1px solid var(--gray-border);
+    border-right: 1px solid var(--gray-border);
+}
+
+.booking-date { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+.booking-date span {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    color: var(--muted); letter-spacing: 0.05em;
+}
+
+.booking-date strong { font-size: 14px; font-weight: 600; white-space: nowrap; }
+
+.booking-arrow { color: var(--muted); font-size: 12px; }
+
+.booking-card-right {
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 12px; min-width: 120px;
+}
+
+.booking-price { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.booking-price span { font-size: 12px; color: var(--muted); }
+.booking-price strong { font-size: 18px; font-weight: 700; color: var(--text); }
+
+.cancel-btn {
+    background: none; border: 1.5px solid var(--danger);
+    color: var(--danger); font-size: 13px; font-weight: 600;
+    padding: 6px 16px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+}
+.cancel-btn:hover { background: var(--danger); color: var(--white); }
+
+.no-action { font-size: 18px; color: var(--gray-border); }
+
+.bookings-empty { text-align: center; padding: 64px 24px; color: var(--muted); }
+.bookings-empty i { font-size: 48px; margin-bottom: 16px; display: block; }
+.bookings-empty p { font-size: 15px; margin-bottom: 24px; }
+
+.booking-hotel-img {
+    width: 200px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.status-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 10px; border-radius: 100px; }
+.status-upcoming  { background: #EFF6FF; color: #2563EB; }
+.status-active    { background: #DCFCE7; color: #16A34A; }
+.status-past      { background: #F1F5F9; color: #64748B; }
+.status-cancelled { background: #FEE2E2; color: #DC2626; }
+
+.bookings-header { margin-bottom: 32px; }
+
+.bookings-header h1 { margin-bottom: 20px; }
+
+.bookings-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.bstat-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.bstat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.bstat-icon.blue   { background: #EFF6FF; color: #2563EB; }
+.bstat-icon.green  { background: #DCFCE7; color: #16A34A; }
+.bstat-icon.orange { background: #FFF7ED; color: #EA580C; }
+
+.bstat-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.bstat-card strong {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
 }

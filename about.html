@@ -19,14 +19,13 @@
     <div class="container nav-inner">
       <a href="index.php" class="logo">StayEase<span>.</span></a>
       <div class="nav-links">
-        <a href="index.php" class="active">Home</a>
+        <a href="index.php">Home</a>
         <a href="search-results.php">Discover</a>
-        <a href="about.html">About</a>
         <a href="reviews_page.php">Reviews</a>
+        <a href="about.html" class="active">About us</a>
       </div>
       <div class="nav-auth">
-        <a href="dashboard.html" class="profile-icon"><i class="fa-regular fa-circle-user"></i></a>
-        <a href="login.html" class="btn-login">Login</a>
+        <a href="dashboard.php" class="profile-icon"><i class="fa-regular fa-circle-user"></i><span class="nav-user" id="navUser"></span></a>
       </div>
     </div>
   </nav>
@@ -160,6 +159,9 @@
         }
     </script>
 
+<script>
+  fetch("php/auth.php?action=session").then(r=>r.json()).then(d=>{if(d.user_name)document.getElementById("navUser").textContent=d.user_name;});
+</script>
 </body>
 
 </html>

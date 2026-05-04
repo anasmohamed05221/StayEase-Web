@@ -5,21 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StayEase. | Room Details</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/hotels.css" />
 </head>
 <body>
   <nav class="navbar">
-    <div class="nav-container">
-      <a class="logo" href="index.html">StayEase.</a>
+    <div class="container nav-inner">
+      <a href="index.php" class="logo">StayEase<span>.</span></a>
       <div class="nav-links">
-        <a class="active" href="index.html">Find Stays</a>
-        <a href="my-bookings.html">My Bookings</a>
-        <a href="#">Deals</a>
-        <a href="about.html">Support</a>
+        <a href="index.php">Home</a>
+        <a href="search-results.php">Discover</a>
+        <a href="reviews_page.php">Reviews</a>
+        <a href="about.html">About us</a>
       </div>
-      <div class="nav-actions">
-        <a href="login.html">Login</a>
-        <a class="signup" href="register.html">Sign Up</a>
+      <div class="nav-auth">
+        <a href="dashboard.php" class="profile-icon"><i class="fa-regular fa-circle-user"></i><span class="nav-user" id="navUser"></span></a>
       </div>
     </div>
   </nav>
@@ -32,7 +33,7 @@
         <section class="gallery">
           <div class="main-photo"><img id="roomImage" src="assets/images/room1.jpg" alt="Room image"></div>
           <div class="small-photo"><img id="roomImage2" src="assets/images/room1.jpg" alt="Room preview"></div>
-          <div class="small-photo dark"><img id="roomImage3" src="assets/images/room1.jpg" alt="Room preview"><span>▦ View all photos</span></div>
+          <div class="small-photo dark"><img id="roomImage3" src="assets/images/room1.jpg" alt="Room preview"><span><i class="fa-solid fa-images"></i> View all photos</span></div>
         </section>
 
         <section class="room-card-large">
@@ -41,28 +42,28 @@
             <span class="tag blue">PREMIUM SELECT</span>
           </div>
           <h1 id="roomName">Loading room...</h1>
-          <p class="location-line">📍 <span id="hotelLocation">Hotel location</span> &nbsp; ★ <span id="rating">0</span>/5</p>
+          <p class="location-line"><i class="fa-solid fa-location-dot"></i> <span id="hotelLocation">Hotel location</span> &nbsp; <i class="fa-solid fa-star"></i> <span id="rating">0</span>/5</p>
         </section>
 
         <section class="details-card">
           <h2>Description</h2>
           <p id="roomDescription">Room description will appear here.</p>
           <div class="features-row">
-            <div>🛏 <span>Bed Type</span><strong>King Size</strong></div>
-            <div>👥 <span>Occupancy</span><strong>2 Adults</strong></div>
-            <div>📐 <span>Size</span><strong>45 m²</strong></div>
+            <div><i class="fa-solid fa-bed"></i> <span>Bed Type</span><strong>King Size</strong></div>
+            <div><i class="fa-solid fa-user-group"></i> <span>Occupancy</span><strong>2 Adults</strong></div>
+            <div><i class="fa-solid fa-ruler-combined"></i> <span>Size</span><strong>45 m²</strong></div>
           </div>
         </section>
 
         <section class="details-card">
           <h2>What this room offers</h2>
           <div class="amenities">
-            <span>📶 High-speed Wi‑Fi</span>
-            <span>❄️ Climate Control</span>
-            <span>📺 Smart TV</span>
-            <span>☕ Nespresso Machine</span>
-            <span>🔐 Digital Safe</span>
-            <span>🍸 Mini Bar</span>
+            <span><i class="fa-solid fa-wifi"></i> High-speed Wi-Fi</span>
+            <span><i class="fa-solid fa-snowflake"></i> Climate Control</span>
+            <span><i class="fa-solid fa-tv"></i> Smart TV</span>
+            <span><i class="fa-solid fa-mug-hot"></i> Nespresso Machine</span>
+            <span><i class="fa-solid fa-lock"></i> Digital Safe</span>
+            <span><i class="fa-solid fa-martini-glass"></i> Mini Bar</span>
           </div>
         </section>
       </div>
@@ -91,53 +92,19 @@
   </main>
 
   <footer class="footer">
-    <strong>StayEase.</strong>
-    <span>© 2024 StayEase. Effortless efficiency for every guest.</span>
+    <div class="footer-inner">
+      <div class="footer-logo">StayEase</div>
+      <div class="footer-links">
+        <a href="about.html">About Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help Center</a>
+        <a href="#">Partners</a>
+      </div>
+      <p class="footer-copy">© 2024 StayEase Inc. All rights reserved.</p>
+    </div>
   </footer>
 
-  <script>
-    const params = new URLSearchParams(location.search);
-    const roomId = params.get('room_id') || 1;
-
-    function esc(text) {
-      return String(text ?? '').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
-    }
-
-    fetch(`php/hotels.php?action=room&room_id=${roomId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.success) throw new Error(data.message);
-
-        const r = data.room;
-        const image = r.image || 'assets/images/room1.jpg';
-        const price = Number(r.price_per_night);
-        const subtotal = price * 4;
-        const total = subtotal + 120 - 100;
-
-        document.getElementById('roomBreadcrumb').textContent = r.name;
-        document.getElementById('roomName').textContent = r.name;
-        document.getElementById('hotelLocation').textContent = `${r.hotel_name}, ${r.city}`;
-        document.getElementById('rating').textContent = data.average_rating;
-        document.getElementById('roomDescription').textContent = r.description;
-        document.getElementById('price').textContent = `$${price.toFixed(0)}`;
-        document.getElementById('nightsCalc').textContent = `$${price.toFixed(0)} × 4 nights`;
-        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(0)}`;
-        document.getElementById('total').textContent = `$${total.toFixed(0)}`;
-        document.getElementById('bookBtn').href = `booking.html?room_id=${r.id}`;
-        document.getElementById('roomImage').src = image;
-        document.getElementById('roomImage2').src = image;
-        document.getElementById('roomImage3').src = image;
-
-        if (r.is_available != 1) {
-          document.getElementById('availability').textContent = 'UNAVAILABLE';
-          document.getElementById('availability').classList.add('danger');
-          document.getElementById('bookBtn').classList.add('disabled');
-          document.getElementById('bookBtn').removeAttribute('href');
-        }
-      })
-      .catch(error => {
-        document.getElementById('roomName').textContent = error.message;
-      });
-  </script>
+  <script src="js/room-detail.js"></script>
 </body>
 </html>
